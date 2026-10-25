@@ -1,0 +1,401 @@
+studentId,courseCode,courseName,cat1,cat2,quiz1,quiz2,quiz3,lab1,lab2,lab3,lab4,lab5,lab6,lab7,lab8,lab9,lab10,attendancePercentage,previousCgpa,weeklyStudyHours,synthetic,predictionStage
+SYN04103,SE,Software Engineering,44.1,50.0,10.0,9.59,10.0,10.0,10.0,10.0,10.0,10.0,10.0,9.24,7.19,10.0,9.43,82.6,9.76,8.0,True,level3
+SYN02038,STAT,Statistics for Engineers,50.0,35.25,10.0,9.81,,,,,,,,,,,,83.4,7.55,12.7,True,level2
+SYN03564,CN,Computer Networks,40.05,26.64,7.65,7.65,7.26,7.53,8.67,5.82,8.86,10.0,7.68,8.04,8.71,5.63,7.79,92.4,7.76,3.2,True,level3
+SYN00837,CN,Computer Networks,34.04,,4.64,,,,,,,,,,,,,63.7,5.37,6.6,True,level1
+SYN03362,OS,Operating Systems,37.71,,7.2,,,,,,,,,,,,,83.5,7.15,10.3,True,level1
+SYN04572,DSA,Data Structures and Algorithms,22.78,,4.19,,,,,,,,,,,,,69.7,5.79,8.8,True,level1
+SYN01542,SE,Software Engineering,38.2,,9.01,,,,,,,,,,,,,78.3,5.61,7.9,True,level1
+SYN03699,SE,Software Engineering,31.08,,9.36,,,,,,,,,,,,,72.5,6.33,9.7,True,level1
+SYN02369,DSA,Data Structures and Algorithms,19.11,23.97,5.2,2.64,4.39,7.48,6.52,7.64,3.78,7.07,7.61,4.47,5.02,5.19,2.78,66.0,5.79,7.9,True,level3
+SYN03884,OOP,Object Oriented Programming,22.86,,7.64,,,,,,,,,,,,,81.4,6.31,11.6,True,level1
+SYN02781,CN,Computer Networks,42.25,26.06,9.04,7.36,,,,,,,,,,,,80.8,6.33,10.6,True,level2
+SYN01724,OOP,Object Oriented Programming,50.0,40.43,6.98,7.7,,,,,,,,,,,,71.9,6.59,10.0,True,level2
+SYN00642,DBMS,Database Systems,43.26,47.2,5.99,5.82,5.43,5.88,9.19,6.05,8.38,8.83,6.6,7.64,8.98,8.36,,79.0,6.43,8.0,True,level3
+SYN01141,OS,Operating Systems,39.01,42.25,9.22,7.6,7.57,7.72,5.41,7.52,8.31,9.0,7.71,,,,7.67,85.2,7.07,9.7,True,level3
+SYN04381,CN,Computer Networks,34.37,36.23,4.23,7.47,4.41,4.83,6.9,6.55,4.83,4.99,,6.18,,5.46,6.47,80.0,5.61,10.0,True,level3
+SYN00439,JAVA,Java Programming,36.85,47.61,7.64,8.26,,,,,,,,,,,,95.0,7.03,8.2,True,level2
+SYN02056,CN,Computer Networks,21.93,22.31,4.48,2.05,5.76,7.46,1.9,5.09,6.53,,,,3.69,5.63,4.54,73.0,3.61,8.4,True,level3
+SYN02433,SE,Software Engineering,33.2,,7.88,,,,,,,,,,,,,95.3,6.97,9.7,True,level1
+SYN03286,OOP,Object Oriented Programming,22.96,,5.0,,,,,,,,,,,,,72.8,6.31,6.5,True,level1
+SYN04528,DBMS,Database Systems,15.99,15.46,0.0,3.65,4.24,3.87,1.43,1.01,4.0,6.0,1.41,4.69,,4.33,6.14,74.8,3.63,6.9,True,level3
+SYN02176,SE,Software Engineering,39.89,,6.72,,,,,,,,,,,,,67.9,6.11,8.1,True,level1
+SYN01365,SE,Software Engineering,23.73,28.15,3.1,4.8,4.55,5.24,5.57,,5.87,4.79,7.13,5.67,,,7.26,83.1,6.78,12.1,True,level3
+SYN03859,STAT,Statistics for Engineers,29.45,20.08,6.66,6.17,8.97,5.77,6.16,7.95,6.74,7.95,4.28,5.36,4.64,6.82,6.41,75.3,5.41,11.8,True,level3
+SYN04305,DSA,Data Structures and Algorithms,21.36,21.94,5.96,6.58,,,,,,,,,,,,81.4,3.3,2.6,True,level2
+SYN01588,OS,Operating Systems,27.84,,4.24,,,,,,,,,,,,,85.9,6.24,7.4,True,level1
+SYN04460,DSA,Data Structures and Algorithms,45.11,34.35,4.63,4.94,5.62,5.86,5.96,4.82,,,4.71,8.75,6.26,,5.24,97.3,6.79,12.7,True,level3
+SYN04262,CN,Computer Networks,23.91,24.61,6.35,5.04,,,,,,,,,,,,64.7,4.71,0.7,True,level2
+SYN02658,OS,Operating Systems,20.1,21.13,4.28,6.28,,,,,,,,,,,,85.8,5.75,9.7,True,level2
+SYN03272,OS,Operating Systems,38.74,,10.0,,,,,,,,,,,,,86.1,7.88,8.0,True,level1
+SYN03536,OOP,Object Oriented Programming,42.09,,8.89,,,,,,,,,,,,,81.7,7.41,6.6,True,level1
+SYN04659,STAT,Statistics for Engineers,50.0,42.54,7.34,10.0,7.95,,9.32,,,9.53,6.44,8.91,6.76,9.24,7.18,70.0,8.97,10.6,True,level3
+SYN04064,STAT,Statistics for Engineers,44.27,30.63,7.12,7.97,,,,,,,,,,,,100.0,6.73,6.8,True,level2
+SYN04173,OS,Operating Systems,28.0,36.93,9.42,10.0,9.43,6.48,10.0,7.9,7.41,7.78,6.25,6.81,8.34,6.63,3.34,76.6,7.66,5.5,True,level3
+SYN04923,DSA,Data Structures and Algorithms,49.94,41.36,8.25,5.47,6.19,5.75,,9.87,8.09,8.89,8.05,9.07,6.65,8.59,,91.9,7.98,18.1,True,level3
+SYN02606,OS,Operating Systems,32.72,,9.49,,,,,,,,,,,,,99.6,7.31,9.1,True,level1
+SYN00032,DSA,Data Structures and Algorithms,32.61,39.35,6.28,7.54,5.67,6.91,4.66,5.3,5.91,6.39,8.76,,7.52,6.82,6.71,61.4,6.79,3.5,True,level3
+SYN04390,SE,Software Engineering,41.62,,8.91,,,,,,,,,,,,,100.0,8.37,8.5,True,level1
+SYN00430,STAT,Statistics for Engineers,45.26,21.3,6.79,7.26,6.23,5.49,,7.84,6.71,,9.52,5.95,6.85,5.95,6.54,99.0,8.03,12.1,True,level3
+SYN00160,JAVA,Java Programming,1.14,,2.65,,,,,,,,,,,,,71.5,3.26,0.2,True,level1
+SYN01036,OS,Operating Systems,33.35,43.61,9.56,9.82,,,,,,,,,,,,84.0,8.55,18.2,True,level2
+SYN01902,SE,Software Engineering,48.61,39.71,9.75,5.99,8.58,,6.89,7.15,10.0,8.54,7.62,8.69,5.63,9.49,7.5,100.0,7.75,8.6,True,level3
+SYN00329,DBMS,Database Systems,23.84,,5.25,,,,,,,,,,,,,64.9,6.49,14.2,True,level1
+SYN00463,STAT,Statistics for Engineers,31.09,28.65,6.27,9.41,7.09,6.47,7.13,5.74,6.7,,4.56,7.05,9.58,6.62,6.53,93.3,6.21,9.7,True,level3
+SYN00755,SE,Software Engineering,32.66,31.33,6.83,6.52,5.44,7.5,4.03,8.58,9.02,8.69,8.84,7.99,10.0,5.84,5.03,100.0,9.76,11.6,True,level3
+SYN00512,SE,Software Engineering,28.5,44.57,8.63,7.31,7.58,7.88,9.16,6.11,5.59,8.69,4.77,7.84,8.25,10.0,5.86,70.8,6.09,4.0,True,level3
+SYN04947,JAVA,Java Programming,21.24,35.43,8.06,7.27,,,,,,,,,,,,87.0,6.37,0.5,True,level2
+SYN01847,SE,Software Engineering,39.07,31.02,9.46,10.0,,,,,,,,,,,,98.2,8.18,7.8,True,level2
+SYN04997,JAVA,Java Programming,20.13,21.22,3.79,1.96,,,,,,,,,,,,79.5,5.67,0.0,True,level2
+SYN01815,JAVA,Java Programming,30.49,,5.94,,,,,,,,,,,,,75.7,7.13,11.6,True,level1
+SYN00040,STAT,Statistics for Engineers,50.0,,6.79,,,,,,,,,,,,,69.8,8.38,11.7,True,level1
+SYN00724,OOP,Object Oriented Programming,25.32,22.41,4.26,7.47,,,,,,,,,,,,82.1,4.86,6.1,True,level2
+SYN01358,OOP,Object Oriented Programming,50.0,36.57,8.35,6.44,7.8,10.0,6.75,9.2,5.74,5.96,4.1,7.98,6.17,7.09,6.94,85.0,7.98,9.3,True,level3
+SYN02602,CN,Computer Networks,46.05,44.37,9.17,9.22,,,,,,,,,,,,95.8,7.11,14.2,True,level2
+SYN02874,OOP,Object Oriented Programming,44.61,,7.54,,,,,,,,,,,,,84.0,6.52,15.4,True,level1
+SYN03379,SE,Software Engineering,41.66,41.53,10.0,10.0,9.59,7.97,7.68,7.65,10.0,6.8,6.97,9.67,9.21,10.0,7.87,85.7,8.88,12.9,True,level3
+SYN01875,JAVA,Java Programming,23.19,34.55,6.67,7.06,4.92,5.59,5.5,4.4,7.1,4.9,,5.24,8.12,5.82,7.5,70.0,6.59,12.2,True,level3
+SYN04824,DSA,Data Structures and Algorithms,35.91,35.88,7.97,6.18,,,,,,,,,,,,76.1,8.28,15.4,True,level2
+SYN04132,DSA,Data Structures and Algorithms,36.87,36.56,6.85,7.78,,,,,,,,,,,,57.9,7.35,5.9,True,level2
+SYN03500,DSA,Data Structures and Algorithms,13.22,24.86,4.96,5.93,2.29,,2.57,2.53,4.23,6.04,3.84,,3.64,2.1,3.89,78.1,5.95,11.4,True,level3
+SYN03614,DBMS,Database Systems,39.39,35.43,6.74,5.07,9.04,5.06,4.29,,7.14,,,5.96,3.49,8.65,5.35,97.5,6.45,5.9,True,level3
+SYN03523,CN,Computer Networks,30.92,,5.27,,,,,,,,,,,,,94.9,6.78,16.0,True,level1
+SYN04108,JAVA,Java Programming,43.01,48.17,7.86,9.5,6.57,,5.79,,6.63,4.71,7.04,6.68,,6.44,4.51,85.8,6.63,9.5,True,level3
+SYN04413,JAVA,Java Programming,40.55,24.96,7.58,8.89,8.63,5.39,5.96,9.99,5.75,8.51,6.78,9.72,6.85,7.35,7.06,87.0,7.48,11.1,True,level3
+SYN03922,STAT,Statistics for Engineers,0.87,0.0,9.93,6.66,4.95,4.84,2.37,4.03,1.86,2.62,3.6,,4.23,2.52,,68.8,3.94,4.5,True,level3
+SYN02834,OOP,Object Oriented Programming,38.1,,7.09,,,,,,,,,,,,,100.0,5.45,13.2,True,level1
+SYN03067,OS,Operating Systems,42.96,43.01,6.83,10.0,,,,,,,,,,,,70.7,7.67,13.6,True,level2
+SYN00196,JAVA,Java Programming,40.58,50.0,10.0,8.65,,,,,,,,,,,,99.0,7.14,8.7,True,level2
+SYN01538,DBMS,Database Systems,17.28,,3.78,,,,,,,,,,,,,83.9,3.5,7.1,True,level1
+SYN04267,JAVA,Java Programming,40.13,43.57,4.12,4.97,,,,,,,,,,,,77.8,7.57,7.1,True,level2
+SYN02102,STAT,Statistics for Engineers,18.22,18.75,6.94,2.76,,,,,,,,,,,,70.6,6.23,1.1,True,level2
+SYN01809,JAVA,Java Programming,36.75,37.59,3.13,6.88,6.08,4.68,3.62,6.33,7.11,4.55,5.2,5.22,5.14,,4.27,73.4,4.87,13.4,True,level3
+SYN03386,DSA,Data Structures and Algorithms,10.03,,2.4,,,,,,,,,,,,,49.1,3.86,7.2,True,level1
+SYN02631,SE,Software Engineering,36.37,,6.65,,,,,,,,,,,,,80.0,7.25,4.0,True,level1
+SYN04623,OOP,Object Oriented Programming,33.38,,5.26,,,,,,,,,,,,,80.4,6.7,10.9,True,level1
+SYN04092,JAVA,Java Programming,18.47,27.69,5.65,4.75,,,,,,,,,,,,67.3,5.99,11.6,True,level2
+SYN04100,JAVA,Java Programming,33.77,,6.71,,,,,,,,,,,,,71.1,7.48,12.0,True,level1
+SYN02863,STAT,Statistics for Engineers,29.95,,5.03,,,,,,,,,,,,,87.9,5.78,12.6,True,level1
+SYN00608,OOP,Object Oriented Programming,48.15,,9.5,,,,,,,,,,,,,95.9,7.27,11.3,True,level1
+SYN01082,DBMS,Database Systems,18.03,22.26,5.44,4.27,3.53,3.63,5.52,,5.43,6.6,2.68,5.15,6.92,2.62,5.1,77.8,5.0,6.7,True,level3
+SYN04801,JAVA,Java Programming,29.04,30.28,6.55,9.47,,,,,,,,,,,,87.6,7.85,12.2,True,level2
+SYN04872,SE,Software Engineering,29.79,,6.99,,,,,,,,,,,,,78.7,7.41,10.5,True,level1
+SYN00465,SE,Software Engineering,38.62,,5.56,,,,,,,,,,,,,56.8,5.61,3.2,True,level1
+SYN01911,DBMS,Database Systems,29.77,32.62,7.0,6.7,9.35,4.75,6.09,6.76,5.81,5.21,5.15,6.46,6.03,6.28,5.4,88.8,6.36,11.3,True,level3
+SYN01641,OS,Operating Systems,46.83,,5.28,,,,,,,,,,,,,85.0,6.67,7.4,True,level1
+SYN03022,DBMS,Database Systems,41.27,41.43,7.74,7.52,10.0,8.08,,10.0,,10.0,4.33,10.0,8.04,8.35,10.0,87.2,8.31,4.6,True,level3
+SYN03948,STAT,Statistics for Engineers,44.93,,8.09,,,,,,,,,,,,,73.1,9.06,3.6,True,level1
+SYN01894,STAT,Statistics for Engineers,28.83,40.76,7.61,3.0,4.04,4.53,,3.35,6.17,,5.48,3.15,4.27,,5.37,46.8,6.54,18.3,True,level3
+SYN03943,SE,Software Engineering,50.0,48.03,5.91,9.2,,,,,,,,,,,,89.5,7.32,2.0,True,level2
+SYN03207,CN,Computer Networks,30.64,,5.96,,,,,,,,,,,,,67.9,5.47,4.8,True,level1
+SYN04733,SE,Software Engineering,41.29,,9.21,,,,,,,,,,,,,90.3,5.91,9.7,True,level1
+SYN03647,CN,Computer Networks,29.45,28.43,5.5,8.36,8.1,7.99,,,8.28,6.0,5.88,7.03,6.52,6.07,10.0,86.3,5.92,10.0,True,level3
+SYN01760,OOP,Object Oriented Programming,31.91,15.38,9.0,8.35,,,,,,,,,,,,86.4,7.99,13.3,True,level2
+SYN02557,OOP,Object Oriented Programming,28.73,,5.51,,,,,,,,,,,,,75.0,5.17,12.1,True,level1
+SYN01193,DBMS,Database Systems,50.0,,8.12,,,,,,,,,,,,,93.7,8.06,18.2,True,level1
+SYN01331,STAT,Statistics for Engineers,32.05,27.25,7.02,6.88,,,,,,,,,,,,85.1,5.25,9.8,True,level2
+SYN03844,CN,Computer Networks,21.62,29.0,6.0,6.93,7.36,5.57,6.29,4.17,4.79,8.48,7.11,5.97,8.5,9.07,7.36,73.6,6.98,11.3,True,level3
+SYN00594,JAVA,Java Programming,32.38,20.6,5.09,5.53,,,,,,,,,,,,67.7,5.6,7.8,True,level2
+SYN04565,CN,Computer Networks,46.8,46.18,7.11,8.63,8.34,,6.35,7.53,,5.62,6.44,9.31,6.04,,6.22,81.8,6.04,2.9,True,level3
+SYN03099,OOP,Object Oriented Programming,43.77,45.22,4.53,6.97,8.16,8.42,6.24,6.35,4.63,7.3,9.52,5.56,,4.49,9.73,58.5,6.85,4.7,True,level3
+SYN00914,STAT,Statistics for Engineers,50.0,,9.46,,,,,,,,,,,,,70.2,8.83,10.6,True,level1
+SYN01643,SE,Software Engineering,33.04,,5.8,,,,,,,,,,,,,80.2,7.0,11.7,True,level1
+SYN03427,SE,Software Engineering,47.81,42.45,10.0,9.96,,,,,,,,,,,,76.2,8.83,18.4,True,level2
+SYN03186,DSA,Data Structures and Algorithms,42.81,,10.0,,,,,,,,,,,,,88.6,9.05,11.5,True,level1
+SYN00186,DSA,Data Structures and Algorithms,20.75,,5.05,,,,,,,,,,,,,87.1,5.92,3.3,True,level1
+SYN04488,DSA,Data Structures and Algorithms,44.19,37.37,3.37,7.14,,,,,,,,,,,,68.8,5.68,10.1,True,level2
+SYN01657,OS,Operating Systems,42.0,47.07,8.01,6.25,7.59,6.14,3.54,8.85,7.79,7.83,,8.07,7.62,6.42,5.84,83.5,7.4,10.5,True,level3
+SYN01112,OOP,Object Oriented Programming,18.33,28.91,5.93,6.31,6.63,4.72,5.36,2.77,,5.24,6.83,4.56,,6.92,5.0,87.2,6.85,12.0,True,level3
+SYN02896,OOP,Object Oriented Programming,23.47,,2.01,,,,,,,,,,,,,75.2,4.62,15.2,True,level1
+SYN01112,SE,Software Engineering,20.32,22.05,6.86,5.68,,,,,,,,,,,,87.2,6.85,12.0,True,level2
+SYN03348,JAVA,Java Programming,35.85,,6.71,,,,,,,,,,,,,60.8,6.26,5.8,True,level1
+SYN04322,CN,Computer Networks,37.19,,5.07,,,,,,,,,,,,,59.7,6.66,9.8,True,level1
+SYN00103,DBMS,Database Systems,46.69,41.76,7.28,10.0,10.0,,7.68,10.0,7.71,9.59,10.0,10.0,7.45,8.55,10.0,93.4,9.74,14.7,True,level3
+SYN00801,CN,Computer Networks,18.45,,0.28,,,,,,,,,,,,,79.5,3.92,1.6,True,level1
+SYN00184,DBMS,Database Systems,28.89,45.52,6.75,8.58,6.48,7.52,6.87,5.91,9.04,8.32,9.36,,10.0,8.61,7.63,96.8,7.92,14.9,True,level3
+SYN03477,CN,Computer Networks,26.8,,5.67,,,,,,,,,,,,,47.3,5.48,5.3,True,level1
+SYN04710,OS,Operating Systems,31.41,29.61,7.58,4.34,,,,,,,,,,,,90.8,6.68,10.7,True,level2
+SYN00785,OOP,Object Oriented Programming,32.32,33.91,3.97,3.37,,,,,,,,,,,,86.4,5.78,15.2,True,level2
+SYN03593,CN,Computer Networks,20.63,20.17,5.57,6.31,4.92,4.67,5.06,6.84,7.77,3.55,5.05,8.31,6.44,5.02,7.57,70.3,4.5,9.2,True,level3
+SYN00314,OOP,Object Oriented Programming,19.74,,6.79,,,,,,,,,,,,,66.8,6.06,6.3,True,level1
+SYN02719,STAT,Statistics for Engineers,19.21,25.03,3.73,2.53,7.56,4.69,,4.33,7.88,5.99,3.46,4.13,4.83,,5.14,75.4,5.97,7.9,True,level3
+SYN04271,OS,Operating Systems,34.45,33.46,6.73,7.16,5.91,6.52,4.95,4.25,,,6.84,,3.7,4.94,4.82,100.0,5.77,6.7,True,level3
+SYN01488,CN,Computer Networks,33.46,,7.26,,,,,,,,,,,,,95.8,8.35,10.1,True,level1
+SYN00523,STAT,Statistics for Engineers,50.0,45.26,8.01,7.34,2.9,,3.57,6.3,6.62,7.09,9.42,6.68,,,10.0,100.0,7.81,8.8,True,level3
+SYN03591,STAT,Statistics for Engineers,34.26,,8.46,,,,,,,,,,,,,81.5,5.35,6.9,True,level1
+SYN02726,STAT,Statistics for Engineers,47.37,46.85,6.61,5.55,,,,,,,,,,,,95.5,8.81,13.8,True,level2
+SYN02949,OOP,Object Oriented Programming,28.44,,3.95,,,,,,,,,,,,,65.9,5.22,5.8,True,level1
+SYN00079,CN,Computer Networks,40.31,,10.0,,,,,,,,,,,,,84.8,7.42,13.7,True,level1
+SYN02488,SE,Software Engineering,37.56,45.18,6.85,7.74,,,,,,,,,,,,69.4,8.58,13.4,True,level2
+SYN02893,STAT,Statistics for Engineers,18.32,29.29,8.31,7.07,6.95,5.51,5.92,5.45,0.62,4.83,5.74,4.49,,7.02,6.54,67.7,6.75,14.9,True,level3
+SYN03364,OOP,Object Oriented Programming,46.73,43.8,10.0,7.44,8.83,8.99,8.65,8.92,8.55,8.79,8.84,8.28,10.0,7.82,9.66,83.1,8.48,9.1,True,level3
+SYN01858,CN,Computer Networks,22.38,17.75,7.67,6.79,,,,,,,,,,,,61.4,6.66,8.4,True,level2
+SYN03980,OOP,Object Oriented Programming,38.9,50.0,6.54,6.63,,,,,,,,,,,,85.7,7.02,6.1,True,level2
+SYN02046,SE,Software Engineering,19.17,20.45,4.56,4.07,5.16,7.05,,,6.91,,5.99,6.3,10.0,5.65,2.9,67.3,6.49,6.4,True,level3
+SYN00464,CN,Computer Networks,12.58,21.67,2.71,3.64,,,,,,,,,,,,62.0,4.29,6.1,True,level2
+SYN00779,DBMS,Database Systems,17.86,,2.75,,,,,,,,,,,,,79.2,4.28,6.5,True,level1
+SYN02608,DBMS,Database Systems,25.71,,4.9,,,,,,,,,,,,,77.8,3.65,6.8,True,level1
+SYN04437,CN,Computer Networks,37.98,19.54,5.52,6.7,3.4,6.63,6.06,7.35,,,,7.13,4.74,4.87,4.38,75.3,5.35,4.7,True,level3
+SYN00535,CN,Computer Networks,29.1,34.34,4.11,6.29,7.37,6.24,7.34,8.31,4.72,6.21,7.47,4.75,5.57,6.02,8.42,100.0,7.13,5.1,True,level3
+SYN02037,OS,Operating Systems,45.95,,5.42,,,,,,,,,,,,,89.8,6.61,3.2,True,level1
+SYN04941,DBMS,Database Systems,34.32,35.51,5.14,7.57,5.17,7.31,4.37,4.2,,6.49,,6.62,2.64,10.0,5.05,88.0,5.28,11.0,True,level3
+SYN00862,DSA,Data Structures and Algorithms,19.37,36.79,6.42,7.37,,,,,,,,,,,,64.3,6.76,6.3,True,level2
+SYN03599,CN,Computer Networks,39.91,23.8,5.63,4.63,8.47,10.0,7.29,7.11,4.11,,,5.96,7.16,9.2,8.86,67.8,5.99,7.6,True,level3
+SYN01578,OOP,Object Oriented Programming,39.16,,7.06,,,,,,,,,,,,,92.5,7.72,6.7,True,level1
+SYN02330,DSA,Data Structures and Algorithms,31.81,44.42,8.85,10.0,,,,,,,,,,,,90.3,7.96,9.6,True,level2
+SYN01226,CN,Computer Networks,30.13,34.13,3.04,7.75,,,,,,,,,,,,92.6,6.73,6.3,True,level2
+SYN01230,DSA,Data Structures and Algorithms,40.84,,10.0,,,,,,,,,,,,,85.9,8.38,13.4,True,level1
+SYN02146,STAT,Statistics for Engineers,37.04,,6.7,,,,,,,,,,,,,85.4,6.86,11.1,True,level1
+SYN01925,OOP,Object Oriented Programming,34.33,46.32,8.48,9.52,,,,,,,,,,,,60.0,7.37,9.6,True,level2
+SYN00092,JAVA,Java Programming,16.39,,8.89,,,,,,,,,,,,,71.0,6.52,8.3,True,level1
+SYN04503,SE,Software Engineering,45.87,,6.32,,,,,,,,,,,,,78.6,8.28,14.9,True,level1
+SYN02621,STAT,Statistics for Engineers,39.48,50.0,6.34,6.96,,,,,,,,,,,,73.4,7.14,5.9,True,level2
+SYN04006,DSA,Data Structures and Algorithms,48.86,33.91,6.33,7.84,,,,,,,,,,,,82.8,7.92,11.5,True,level2
+SYN04275,STAT,Statistics for Engineers,23.07,,5.91,,,,,,,,,,,,,94.3,2.88,0.2,True,level1
+SYN04047,STAT,Statistics for Engineers,35.01,31.62,4.57,5.96,1.77,,7.99,5.8,,7.5,4.25,6.93,,5.71,4.83,50.2,5.62,3.1,True,level3
+SYN04127,OS,Operating Systems,44.44,42.92,9.76,8.31,9.9,8.46,5.92,6.1,6.67,7.58,7.37,8.74,8.74,5.9,8.35,75.4,7.42,12.4,True,level3
+SYN02478,JAVA,Java Programming,33.07,20.57,7.72,5.16,7.07,6.25,6.0,6.5,5.82,7.36,8.4,7.56,6.89,7.48,9.84,60.8,6.54,12.2,True,level3
+SYN02317,CN,Computer Networks,43.29,34.49,5.33,6.42,7.11,7.41,5.62,6.77,7.88,5.47,4.1,6.13,,5.48,4.48,76.0,7.29,11.5,True,level3
+SYN01020,CN,Computer Networks,24.51,,6.3,,,,,,,,,,,,,68.5,5.37,6.0,True,level1
+SYN00593,OS,Operating Systems,6.38,,3.67,,,,,,,,,,,,,75.6,4.11,7.2,True,level1
+SYN04298,JAVA,Java Programming,37.86,,9.44,,,,,,,,,,,,,76.7,6.89,14.7,True,level1
+SYN04874,JAVA,Java Programming,41.79,,8.02,,,,,,,,,,,,,79.8,8.95,15.2,True,level1
+SYN01482,JAVA,Java Programming,22.39,38.81,5.5,3.73,,,,,,,,,,,,59.1,5.91,6.4,True,level2
+SYN01060,DSA,Data Structures and Algorithms,31.17,21.11,6.02,5.33,8.21,6.29,7.34,3.23,4.88,,4.66,6.42,,2.85,3.39,76.9,6.28,13.4,True,level3
+SYN03806,CN,Computer Networks,39.01,,8.1,,,,,,,,,,,,,92.7,7.25,10.1,True,level1
+SYN04791,SE,Software Engineering,23.29,42.54,6.24,9.32,6.67,7.63,3.25,7.93,4.83,7.3,5.74,8.54,,,7.87,48.3,6.51,14.6,True,level3
+SYN00825,DSA,Data Structures and Algorithms,31.61,31.62,4.93,4.9,7.89,,,7.85,3.95,5.95,,8.5,4.75,7.26,7.17,60.1,5.71,9.0,True,level3
+SYN02874,SE,Software Engineering,24.83,,5.17,,,,,,,,,,,,,84.0,6.52,15.4,True,level1
+SYN01851,OOP,Object Oriented Programming,48.31,,7.45,,,,,,,,,,,,,82.2,7.57,2.7,True,level1
+SYN00672,OS,Operating Systems,34.85,28.73,6.41,8.49,,,,,,,,,,,,86.4,6.79,7.0,True,level2
+SYN03225,DSA,Data Structures and Algorithms,30.99,,5.65,,,,,,,,,,,,,75.5,4.25,8.1,True,level1
+SYN04783,OS,Operating Systems,20.26,,6.25,,,,,,,,,,,,,90.6,5.76,6.3,True,level1
+SYN04311,SE,Software Engineering,31.77,,7.2,,,,,,,,,,,,,84.9,7.47,8.4,True,level1
+SYN04517,SE,Software Engineering,27.59,27.99,5.24,5.4,,,,,,,,,,,,68.0,7.18,17.1,True,level2
+SYN00936,CN,Computer Networks,45.58,35.35,5.55,5.19,,,,,,,,,,,,77.7,6.54,8.0,True,level2
+SYN01900,SE,Software Engineering,31.25,31.3,4.78,4.13,6.41,6.68,8.47,5.98,5.88,,5.33,5.73,,,9.25,71.2,5.9,13.0,True,level3
+SYN03796,CN,Computer Networks,22.83,,6.66,,,,,,,,,,,,,70.1,7.95,7.8,True,level1
+SYN00816,CN,Computer Networks,23.22,22.02,5.39,3.26,4.39,2.36,5.86,,4.58,,5.58,6.28,1.94,3.23,3.36,85.7,4.46,16.1,True,level3
+SYN01934,DSA,Data Structures and Algorithms,42.83,49.78,9.75,7.68,,,,,,,,,,,,55.7,7.47,18.5,True,level2
+SYN02449,SE,Software Engineering,48.48,44.76,9.44,8.0,,,,,,,,,,,,64.7,8.68,18.4,True,level2
+SYN04048,CN,Computer Networks,28.5,,5.4,,,,,,,,,,,,,100.0,6.01,19.6,True,level1
+SYN03586,DBMS,Database Systems,24.32,38.84,6.16,5.94,6.49,6.95,,4.32,7.39,6.48,6.73,5.7,6.74,6.18,,93.9,6.37,8.6,True,level3
+SYN03183,DBMS,Database Systems,20.94,23.1,6.14,6.22,7.32,5.34,3.26,4.43,5.24,3.16,4.85,4.36,3.46,5.05,4.58,94.2,7.14,8.0,True,level3
+SYN04472,STAT,Statistics for Engineers,48.79,41.65,6.75,5.55,,,,,,,,,,,,78.6,7.15,6.5,True,level2
+SYN02888,DBMS,Database Systems,19.47,25.35,4.74,1.47,7.0,5.51,5.03,5.96,7.21,5.28,5.56,5.74,5.68,3.76,7.87,65.8,6.2,0.0,True,level3
+SYN02603,STAT,Statistics for Engineers,23.57,,8.43,,,,,,,,,,,,,74.5,6.44,10.2,True,level1
+SYN01261,DBMS,Database Systems,19.57,28.12,5.5,6.53,5.35,6.79,5.89,6.95,3.49,6.11,5.37,7.2,6.57,4.89,5.49,81.8,5.31,10.6,True,level3
+SYN02644,SE,Software Engineering,33.17,26.14,5.98,7.56,,,,,,,,,,,,75.7,7.31,11.9,True,level2
+SYN02958,OOP,Object Oriented Programming,25.33,,4.69,,,,,,,,,,,,,72.9,6.53,15.6,True,level1
+SYN04172,DSA,Data Structures and Algorithms,14.27,18.01,0.25,0.47,3.56,3.28,,1.43,1.89,4.04,,5.07,0.44,2.17,2.93,63.1,3.64,5.5,True,level3
+SYN03244,OS,Operating Systems,28.04,32.21,5.56,3.62,4.89,6.39,6.25,,2.57,,,3.62,3.91,4.37,7.66,76.4,4.62,0.3,True,level3
+SYN02259,DSA,Data Structures and Algorithms,41.01,35.84,4.99,6.56,,,,,,,,,,,,91.6,7.15,7.4,True,level2
+SYN04759,DBMS,Database Systems,27.81,27.22,5.28,7.32,,,,,,,,,,,,76.5,7.23,7.4,True,level2
+SYN02968,STAT,Statistics for Engineers,50.0,45.14,6.04,7.59,,,,,,,,,,,,72.0,7.93,11.0,True,level2
+SYN02724,OS,Operating Systems,22.58,,4.44,,,,,,,,,,,,,80.7,6.34,7.5,True,level1
+SYN03413,DBMS,Database Systems,36.16,,7.18,,,,,,,,,,,,,83.6,6.73,3.4,True,level1
+SYN02131,SE,Software Engineering,32.73,,5.02,,,,,,,,,,,,,77.7,6.59,14.3,True,level1
+SYN04619,OS,Operating Systems,24.43,,8.28,,,,,,,,,,,,,72.8,5.82,11.2,True,level1
+SYN00691,OS,Operating Systems,30.74,38.93,5.29,5.07,5.43,4.58,6.39,9.47,7.45,,7.69,9.19,9.63,5.7,9.73,97.4,6.5,13.6,True,level3
+SYN04492,CN,Computer Networks,44.56,36.14,8.96,7.11,6.77,5.68,7.58,7.84,6.62,9.33,8.6,7.09,8.11,8.07,7.25,93.2,7.59,6.5,True,level3
+SYN02942,STAT,Statistics for Engineers,48.96,,9.06,,,,,,,,,,,,,82.6,7.56,13.5,True,level1
+SYN01151,SE,Software Engineering,21.89,41.12,5.62,5.34,8.23,4.57,7.58,4.07,7.26,6.64,4.11,8.96,8.3,7.12,5.77,86.5,6.84,13.5,True,level3
+SYN02397,JAVA,Java Programming,30.23,,6.85,,,,,,,,,,,,,89.2,6.55,3.8,True,level1
+SYN02148,DBMS,Database Systems,27.38,23.71,6.87,6.45,6.83,,5.41,4.38,7.7,,10.0,7.92,4.02,5.83,4.66,62.9,5.18,13.8,True,level3
+SYN04089,DBMS,Database Systems,36.03,37.89,10.0,5.87,6.52,,9.3,8.79,6.56,7.77,6.96,6.05,7.51,,4.93,77.0,7.49,8.5,True,level3
+SYN01700,DSA,Data Structures and Algorithms,16.75,,5.76,,,,,,,,,,,,,100.0,4.58,3.8,True,level1
+SYN02709,SE,Software Engineering,31.09,,7.8,,,,,,,,,,,,,96.2,6.64,0.0,True,level1
+SYN01165,DBMS,Database Systems,34.56,35.88,4.19,2.85,,,,,,,,,,,,74.2,4.8,5.7,True,level2
+SYN03983,SE,Software Engineering,48.34,33.38,5.58,5.34,10.0,7.19,10.0,7.43,5.35,,7.64,,9.95,6.95,,88.6,7.51,14.0,True,level3
+SYN00120,CN,Computer Networks,37.7,32.74,7.01,4.55,5.79,10.0,5.86,5.1,6.22,5.47,8.24,4.42,6.95,5.56,,75.7,6.12,3.5,True,level3
+SYN01961,JAVA,Java Programming,47.06,33.89,2.14,7.78,5.75,,6.6,5.32,6.82,7.77,5.03,5.61,,7.08,7.67,83.9,7.15,4.4,True,level3
+SYN00059,CN,Computer Networks,35.13,37.87,6.07,8.07,8.45,7.3,7.21,7.3,7.83,5.59,4.22,9.04,6.85,9.83,4.71,100.0,5.95,12.9,True,level3
+SYN02457,CN,Computer Networks,36.51,36.29,8.92,9.61,,,,,,,,,,,,93.8,6.18,5.7,True,level2
+SYN02538,CN,Computer Networks,31.99,,6.5,,,,,,,,,,,,,67.1,6.42,11.2,True,level1
+SYN04062,CN,Computer Networks,27.3,,4.83,,,,,,,,,,,,,82.5,5.08,7.0,True,level1
+SYN02681,OOP,Object Oriented Programming,18.38,29.57,4.33,3.98,1.75,4.32,4.6,2.52,5.29,,5.49,6.19,8.12,5.51,5.8,88.0,4.77,0.0,True,level3
+SYN04304,DSA,Data Structures and Algorithms,20.92,30.95,5.48,4.9,,,,,,,,,,,,85.7,3.84,3.5,True,level2
+SYN03787,OOP,Object Oriented Programming,36.55,40.41,8.8,8.08,8.17,10.0,10.0,10.0,6.67,10.0,7.25,7.27,7.02,9.8,7.93,73.5,8.42,13.3,True,level3
+SYN04879,OS,Operating Systems,25.35,,5.96,,,,,,,,,,,,,95.7,7.21,9.6,True,level1
+SYN04572,JAVA,Java Programming,19.06,28.3,3.15,5.73,7.11,5.03,3.37,6.49,5.22,4.16,2.65,4.29,7.45,3.96,,69.7,5.79,8.8,True,level3
+SYN02967,DSA,Data Structures and Algorithms,21.45,,4.35,,,,,,,,,,,,,64.0,2.52,0.0,True,level1
+SYN03103,SE,Software Engineering,48.02,,7.87,,,,,,,,,,,,,64.3,8.82,13.7,True,level1
+SYN01254,STAT,Statistics for Engineers,46.38,39.95,9.48,10.0,,,,,,,,,,,,97.4,8.37,6.6,True,level2
+SYN01746,STAT,Statistics for Engineers,36.67,34.47,8.06,6.74,,,,,,,,,,,,93.3,8.81,9.2,True,level2
+SYN00508,DBMS,Database Systems,37.75,19.87,7.74,8.12,,,,,,,,,,,,70.9,6.96,0.3,True,level2
+SYN03756,DSA,Data Structures and Algorithms,47.33,,7.96,,,,,,,,,,,,,85.0,7.12,5.3,True,level1
+SYN03563,OS,Operating Systems,48.4,,6.47,,,,,,,,,,,,,94.8,5.42,13.0,True,level1
+SYN02405,OS,Operating Systems,29.36,38.67,7.85,7.55,5.21,5.42,5.65,7.27,8.03,8.34,5.19,5.2,5.9,4.26,5.83,81.5,5.82,18.2,True,level3
+SYN04441,CN,Computer Networks,50.0,45.95,7.58,7.61,6.6,7.7,9.08,10.0,,10.0,10.0,8.74,10.0,9.04,,69.7,7.58,16.0,True,level3
+SYN01402,DSA,Data Structures and Algorithms,26.17,,5.2,,,,,,,,,,,,,69.8,6.44,8.0,True,level1
+SYN03530,DBMS,Database Systems,14.14,,5.26,,,,,,,,,,,,,100.0,4.57,3.0,True,level1
+SYN04490,STAT,Statistics for Engineers,31.47,,7.45,,,,,,,,,,,,,67.8,8.84,5.7,True,level1
+SYN03208,OS,Operating Systems,26.42,22.47,2.83,5.85,,,,,,,,,,,,62.9,4.65,4.7,True,level2
+SYN04842,DSA,Data Structures and Algorithms,24.49,35.62,6.96,6.48,10.0,7.67,7.77,7.16,6.63,8.04,5.68,9.51,6.53,7.66,8.93,87.4,6.87,12.1,True,level3
+SYN00389,DSA,Data Structures and Algorithms,47.73,42.16,9.72,6.55,8.27,6.93,6.13,,7.35,10.0,6.68,9.23,7.06,8.82,,87.7,8.07,9.1,True,level3
+SYN03706,DSA,Data Structures and Algorithms,38.21,,7.72,,,,,,,,,,,,,60.7,5.89,14.5,True,level1
+SYN01400,JAVA,Java Programming,33.25,48.86,10.0,10.0,,,,,,,,,,,,79.8,8.57,12.1,True,level2
+SYN04326,DBMS,Database Systems,24.09,,5.8,,,,,,,,,,,,,80.9,6.06,13.3,True,level1
+SYN00819,JAVA,Java Programming,47.54,,6.91,,,,,,,,,,,,,71.6,7.0,5.9,True,level1
+SYN02501,DSA,Data Structures and Algorithms,26.64,11.17,3.53,5.81,,,,,,,,,,,,62.7,5.97,0.0,True,level2
+SYN00430,JAVA,Java Programming,37.71,39.98,10.0,5.61,,,,,,,,,,,,99.0,8.03,12.1,True,level2
+SYN00929,SE,Software Engineering,34.62,38.0,9.78,6.75,5.2,5.56,3.13,6.2,6.42,6.66,3.37,6.83,5.44,5.25,6.18,55.7,8.03,16.0,True,level3
+SYN04074,CN,Computer Networks,29.34,44.8,7.53,5.27,,,,,,,,,,,,67.0,6.22,3.2,True,level2
+SYN02998,OS,Operating Systems,33.15,,8.25,,,,,,,,,,,,,59.6,6.39,6.8,True,level1
+SYN04140,OS,Operating Systems,39.95,43.67,4.9,7.52,,,,,,,,,,,,78.9,7.18,12.0,True,level2
+SYN02458,JAVA,Java Programming,30.45,,7.01,,,,,,,,,,,,,85.6,5.31,5.0,True,level1
+SYN03715,CN,Computer Networks,17.75,,2.13,,,,,,,,,,,,,84.7,2.8,1.8,True,level1
+SYN01766,CN,Computer Networks,47.97,42.5,10.0,10.0,,,,,,,,,,,,81.4,7.8,4.7,True,level2
+SYN00711,OOP,Object Oriented Programming,36.31,35.33,5.5,6.77,,,,,,,,,,,,83.2,10.0,14.0,True,level2
+SYN00778,DBMS,Database Systems,23.52,25.95,7.16,7.03,6.91,9.2,,6.52,4.73,8.33,7.79,6.79,7.29,3.7,2.28,83.8,5.66,9.9,True,level3
+SYN01213,OS,Operating Systems,34.66,42.41,7.1,7.43,5.9,3.76,9.02,8.71,10.0,5.54,8.61,7.37,5.04,7.04,5.75,98.6,7.66,4.4,True,level3
+SYN00922,CN,Computer Networks,12.74,19.34,4.47,1.65,,,,,,,,,,,,65.0,4.04,0.0,True,level2
+SYN01859,OOP,Object Oriented Programming,38.79,50.0,9.77,7.74,7.32,,,7.32,6.4,8.54,,3.21,6.93,8.59,8.14,88.0,6.98,10.5,True,level3
+SYN00186,SE,Software Engineering,26.31,28.05,5.9,2.21,,,,,,,,,,,,87.1,5.92,3.3,True,level2
+SYN03456,SE,Software Engineering,23.91,36.69,5.32,6.44,6.71,,5.26,3.47,3.88,6.36,4.95,,5.02,3.69,7.98,94.2,6.72,10.6,True,level3
+SYN02997,OOP,Object Oriented Programming,27.35,18.34,6.17,3.77,,,,,,,,,,,,66.0,5.62,1.3,True,level2
+SYN04754,OOP,Object Oriented Programming,41.16,33.79,7.17,10.0,,,,,,,,,,,,65.8,7.72,15.6,True,level2
+SYN03094,JAVA,Java Programming,41.78,37.75,7.41,8.39,,,,,,,,,,,,85.7,7.47,17.3,True,level2
+SYN03585,DBMS,Database Systems,33.0,39.45,6.92,3.97,,,,,,,,,,,,98.7,7.03,7.3,True,level2
+SYN03983,OS,Operating Systems,23.1,21.22,7.41,7.89,10.0,4.0,6.8,6.91,,7.97,6.71,7.99,8.51,9.59,6.67,88.6,7.51,14.0,True,level3
+SYN02886,SE,Software Engineering,41.67,,5.32,,,,,,,,,,,,,86.2,6.53,11.3,True,level1
+SYN02661,SE,Software Engineering,28.24,,5.47,,,,,,,,,,,,,83.6,6.92,13.5,True,level1
+SYN04086,CN,Computer Networks,7.98,,1.97,,,,,,,,,,,,,71.1,3.44,6.6,True,level1
+SYN04820,CN,Computer Networks,21.35,,5.82,,,,,,,,,,,,,84.7,5.75,13.8,True,level1
+SYN00760,DBMS,Database Systems,23.74,,7.85,,,,,,,,,,,,,80.9,6.4,12.2,True,level1
+SYN04615,DSA,Data Structures and Algorithms,40.49,28.94,5.33,4.0,,,,,,,,,,,,85.5,7.62,10.2,True,level2
+SYN01865,CN,Computer Networks,27.83,,8.1,,,,,,,,,,,,,80.7,7.02,6.8,True,level1
+SYN00927,JAVA,Java Programming,39.65,35.8,7.71,7.07,,,,,,,,,,,,63.8,6.2,6.8,True,level2
+SYN00609,OOP,Object Oriented Programming,36.51,38.47,5.11,7.89,4.35,7.11,8.69,,6.72,5.54,,6.64,5.89,,7.86,93.5,6.3,9.0,True,level3
+SYN01199,JAVA,Java Programming,36.94,27.51,7.25,3.98,,,,,,,,,,,,79.6,5.1,0.0,True,level2
+SYN01024,SE,Software Engineering,35.03,45.94,8.08,9.75,4.75,,7.93,7.75,6.54,6.69,7.97,7.55,9.88,8.26,6.59,76.7,7.5,10.0,True,level3
+SYN03555,JAVA,Java Programming,37.02,43.49,10.0,7.68,9.17,10.0,9.32,8.17,6.79,8.17,9.37,9.34,8.98,5.88,3.51,100.0,10.0,15.5,True,level3
+SYN03220,CN,Computer Networks,37.74,,4.61,,,,,,,,,,,,,85.4,6.18,11.2,True,level1
+SYN03456,DBMS,Database Systems,28.78,,3.08,,,,,,,,,,,,,94.2,6.72,10.6,True,level1
+SYN01124,STAT,Statistics for Engineers,34.77,39.65,8.9,10.0,,,,,,,,,,,,82.2,6.97,10.2,True,level2
+SYN02164,STAT,Statistics for Engineers,24.46,26.65,4.13,5.72,,,,,,,,,,,,63.7,5.33,10.9,True,level2
+SYN02619,DBMS,Database Systems,38.51,32.15,3.78,3.5,4.77,6.31,8.89,6.75,4.98,5.68,4.36,,3.83,5.96,5.18,80.4,5.57,16.1,True,level3
+SYN00536,DBMS,Database Systems,20.53,,5.62,,,,,,,,,,,,,72.7,5.61,10.6,True,level1
+SYN00982,DSA,Data Structures and Algorithms,35.99,32.56,6.78,7.01,,,,,,,,,,,,79.2,7.05,12.7,True,level2
+SYN02290,STAT,Statistics for Engineers,37.85,32.17,6.42,5.69,,,,,,,,,,,,61.6,6.4,6.5,True,level2
+SYN03779,SE,Software Engineering,47.81,50.0,4.45,10.0,10.0,,9.5,10.0,10.0,7.31,9.64,7.46,8.81,9.2,10.0,89.5,10.0,10.8,True,level3
+SYN00528,CN,Computer Networks,37.94,,8.31,,,,,,,,,,,,,100.0,8.1,9.3,True,level1
+SYN00175,DBMS,Database Systems,35.12,29.65,4.44,6.26,4.59,6.09,3.37,4.04,4.37,,4.71,,,4.02,2.3,81.5,6.2,8.9,True,level3
+SYN00365,OOP,Object Oriented Programming,48.81,44.34,8.87,9.16,,,,,,,,,,,,96.2,6.7,15.6,True,level2
+SYN03275,DBMS,Database Systems,42.75,32.37,6.31,7.56,,,,,,,,,,,,92.6,6.65,11.6,True,level2
+SYN03454,CN,Computer Networks,45.82,38.59,7.86,10.0,,,,,,,,,,,,75.3,7.02,10.3,True,level2
+SYN00869,STAT,Statistics for Engineers,30.27,,7.49,,,,,,,,,,,,,83.4,6.68,8.3,True,level1
+SYN00958,DBMS,Database Systems,40.16,,6.68,,,,,,,,,,,,,71.3,5.81,8.1,True,level1
+SYN02249,JAVA,Java Programming,50.0,40.16,10.0,7.62,,,,,,,,,,,,74.3,8.43,9.3,True,level2
+SYN01192,SE,Software Engineering,50.0,41.21,7.79,7.85,7.88,7.58,5.88,,7.45,10.0,,8.58,7.91,7.13,6.98,93.0,7.83,11.1,True,level3
+SYN01840,DBMS,Database Systems,25.12,36.84,2.82,6.3,3.26,2.88,,,3.99,,5.48,5.77,3.87,7.79,4.86,92.4,4.7,4.6,True,level3
+SYN01530,OOP,Object Oriented Programming,30.8,,4.39,,,,,,,,,,,,,100.0,6.84,3.7,True,level1
+SYN04825,SE,Software Engineering,40.08,39.89,8.39,6.65,,,,,,,,,,,,100.0,8.29,11.4,True,level2
+SYN03162,SE,Software Engineering,50.0,,6.94,,,,,,,,,,,,,78.5,8.43,10.4,True,level1
+SYN01007,JAVA,Java Programming,31.48,32.74,9.79,8.23,,,,,,,,,,,,54.9,4.24,4.2,True,level2
+SYN01995,CN,Computer Networks,31.23,32.59,4.9,8.01,,,,,,,,,,,,72.8,7.11,8.3,True,level2
+SYN03383,OOP,Object Oriented Programming,41.62,37.72,6.13,7.07,,,,,,,,,,,,83.4,7.49,12.3,True,level2
+SYN04322,DBMS,Database Systems,25.12,,7.2,,,,,,,,,,,,,59.7,6.66,9.8,True,level1
+SYN03837,STAT,Statistics for Engineers,30.56,48.61,8.35,8.73,,,,,,,,,,,,82.3,6.67,7.2,True,level2
+SYN03194,CN,Computer Networks,25.87,,6.18,,,,,,,,,,,,,85.2,7.72,7.0,True,level1
+SYN01456,CN,Computer Networks,42.84,,10.0,,,,,,,,,,,,,83.1,8.67,11.1,True,level1
+SYN03862,DBMS,Database Systems,38.35,42.49,7.24,7.86,,,,,,,,,,,,100.0,8.92,20.6,True,level2
+SYN04827,STAT,Statistics for Engineers,37.89,50.0,10.0,10.0,,,,,,,,,,,,81.7,10.0,15.3,True,level2
+SYN03394,JAVA,Java Programming,23.81,50.0,7.51,6.51,4.25,7.44,5.75,6.9,,7.65,7.06,6.76,5.44,,7.04,92.8,6.72,5.2,True,level3
+SYN03543,JAVA,Java Programming,29.79,27.21,6.35,4.96,,,,,,,,,,,,85.1,6.38,2.0,True,level2
+SYN02100,STAT,Statistics for Engineers,37.3,37.27,5.8,9.69,4.72,7.76,7.71,6.01,7.92,,6.36,6.8,,7.04,,90.1,6.2,6.3,True,level3
+SYN00648,SE,Software Engineering,37.17,27.28,3.81,4.86,2.49,6.63,5.71,6.35,5.9,6.6,7.58,5.21,5.92,4.55,4.01,95.6,6.59,6.4,True,level3
+SYN00312,JAVA,Java Programming,28.74,15.75,3.96,5.0,,,,,,,,,,,,89.9,4.73,11.9,True,level2
+SYN03944,CN,Computer Networks,28.17,32.41,5.02,7.33,4.53,,3.52,2.67,5.54,,,7.59,4.47,7.9,7.93,93.9,5.56,0.5,True,level3
+SYN01032,DBMS,Database Systems,35.02,38.59,3.9,5.91,,,,,,,,,,,,79.0,7.46,3.9,True,level2
+SYN00855,SE,Software Engineering,29.19,36.39,5.6,6.86,,,,,,,,,,,,65.5,5.97,8.3,True,level2
+SYN03875,OS,Operating Systems,22.2,,4.13,,,,,,,,,,,,,84.1,4.56,3.0,True,level1
+SYN03379,JAVA,Java Programming,31.29,,6.8,,,,,,,,,,,,,85.7,8.88,12.9,True,level1
+SYN00014,OS,Operating Systems,42.52,29.19,9.61,9.01,,,,,,,,,,,,94.8,7.45,3.0,True,level2
+SYN03824,DSA,Data Structures and Algorithms,19.37,,4.17,,,,,,,,,,,,,71.3,6.32,8.5,True,level1
+SYN01908,OOP,Object Oriented Programming,44.65,42.45,10.0,8.46,,,,,,,,,,,,93.8,8.79,16.0,True,level2
+SYN04520,CN,Computer Networks,31.23,17.89,2.37,5.17,2.79,5.0,3.91,,,4.06,3.04,5.29,4.24,4.99,3.02,61.5,5.86,0.0,True,level3
+SYN02804,DSA,Data Structures and Algorithms,31.56,,5.9,,,,,,,,,,,,,73.9,7.18,11.2,True,level1
+SYN01938,CN,Computer Networks,47.99,50.0,9.44,10.0,10.0,10.0,8.25,,10.0,6.78,10.0,9.58,8.96,10.0,9.51,78.6,10.0,8.5,True,level3
+SYN04899,SE,Software Engineering,30.07,,7.79,,,,,,,,,,,,,86.3,6.38,10.5,True,level1
+SYN03176,DSA,Data Structures and Algorithms,39.43,29.99,8.11,2.34,,,,,,,,,,,,82.6,4.86,0.0,True,level2
+SYN01617,OS,Operating Systems,32.68,,9.6,,,,,,,,,,,,,76.8,5.94,8.3,True,level1
+SYN04077,CN,Computer Networks,45.91,43.5,7.22,7.97,4.84,8.71,6.05,9.48,8.51,5.03,7.69,7.38,7.59,8.26,6.67,70.7,5.96,9.9,True,level3
+SYN03341,JAVA,Java Programming,26.32,34.1,7.28,9.81,7.72,,6.33,6.15,7.11,7.1,7.42,,,6.33,5.46,91.5,7.58,7.2,True,level3
+SYN04567,DSA,Data Structures and Algorithms,26.88,,4.2,,,,,,,,,,,,,60.9,4.66,8.5,True,level1
+SYN01200,OOP,Object Oriented Programming,31.65,23.95,3.85,4.98,5.09,2.95,,4.63,,6.05,5.18,6.04,4.05,4.39,6.59,74.7,5.87,1.1,True,level3
+SYN02896,JAVA,Java Programming,32.48,35.54,4.24,7.67,,,,,,,,,,,,75.2,4.62,15.2,True,level2
+SYN01628,OOP,Object Oriented Programming,30.75,32.67,4.53,4.14,,,,,,,,,,,,81.1,6.23,9.7,True,level2
+SYN00685,JAVA,Java Programming,50.0,,8.09,,,,,,,,,,,,,93.2,8.64,4.1,True,level1
+SYN02846,CN,Computer Networks,30.52,38.17,10.0,7.03,,,,,,,,,,,,78.8,7.32,7.9,True,level2
+SYN00736,STAT,Statistics for Engineers,27.59,27.32,4.15,3.88,6.88,3.27,6.32,7.74,3.69,5.49,4.95,5.69,7.38,7.61,4.34,87.7,6.2,8.0,True,level3
+SYN04300,JAVA,Java Programming,24.51,,5.89,,,,,,,,,,,,,60.6,5.31,6.9,True,level1
+SYN02246,SE,Software Engineering,26.22,,8.25,,,,,,,,,,,,,74.9,5.8,12.5,True,level1
+SYN01834,DSA,Data Structures and Algorithms,21.44,27.85,6.94,4.78,,,,,,,,,,,,61.7,5.66,4.0,True,level2
+SYN00176,STAT,Statistics for Engineers,18.58,21.69,6.13,5.81,,,,,,,,,,,,61.0,4.56,4.9,True,level2
+SYN03627,DBMS,Database Systems,18.0,,8.74,,,,,,,,,,,,,74.7,5.82,5.4,True,level1
+SYN02040,OOP,Object Oriented Programming,11.5,38.52,3.54,3.7,,,,,,,,,,,,81.1,4.23,0.1,True,level2
+SYN01162,CN,Computer Networks,37.52,,6.55,,,,,,,,,,,,,93.3,8.44,13.4,True,level1
+SYN02113,DSA,Data Structures and Algorithms,42.46,40.57,8.62,8.97,,,,,,,,,,,,77.5,7.76,6.8,True,level2
+SYN01279,STAT,Statistics for Engineers,45.33,,9.62,,,,,,,,,,,,,100.0,7.94,19.4,True,level1
+SYN02329,DSA,Data Structures and Algorithms,34.72,,9.1,,,,,,,,,,,,,60.3,5.96,6.7,True,level1
+SYN03738,STAT,Statistics for Engineers,29.71,34.1,7.05,6.26,3.43,6.32,,8.2,,6.23,,7.6,6.43,6.47,7.14,80.3,6.77,10.0,True,level3
+SYN03958,CN,Computer Networks,24.3,,6.96,,,,,,,,,,,,,82.5,5.98,8.5,True,level1
+SYN03150,DSA,Data Structures and Algorithms,43.51,37.09,6.12,7.05,,,,,,,,,,,,71.3,7.55,18.2,True,level2
+SYN04019,DSA,Data Structures and Algorithms,46.29,,8.14,,,,,,,,,,,,,86.5,6.61,0.6,True,level1
+SYN02375,DBMS,Database Systems,31.23,19.21,5.16,5.04,,,,,,,,,,,,86.7,6.83,15.5,True,level2
+SYN04905,JAVA,Java Programming,26.83,42.91,5.2,7.69,,,,,,,,,,,,68.9,7.88,10.8,True,level2
+SYN01769,STAT,Statistics for Engineers,32.53,35.95,8.58,7.0,7.22,7.78,5.15,6.43,5.41,4.85,,,4.59,4.3,7.45,80.6,5.21,6.5,True,level3
+SYN00209,JAVA,Java Programming,41.42,47.74,4.78,5.32,5.34,,4.52,5.7,4.39,9.74,6.44,,5.05,5.25,,79.3,5.81,9.7,True,level3
+SYN04206,OS,Operating Systems,34.21,46.35,6.83,7.04,9.29,,8.47,7.41,,,8.88,8.04,4.84,8.07,7.69,99.4,7.27,5.4,True,level3
+SYN02289,DBMS,Database Systems,36.71,,6.63,,,,,,,,,,,,,94.4,5.96,6.8,True,level1
+SYN04949,STAT,Statistics for Engineers,36.76,,4.18,,,,,,,,,,,,,65.1,3.79,5.7,True,level1
+SYN03933,STAT,Statistics for Engineers,27.7,23.79,8.22,6.07,7.06,7.97,,5.28,5.74,8.34,7.66,,7.59,5.5,7.27,85.6,8.54,10.7,True,level3
+SYN04562,JAVA,Java Programming,31.4,27.02,8.47,9.14,7.72,4.13,6.63,,,7.36,5.92,,6.81,2.8,7.91,84.3,6.77,6.0,True,level3
+SYN04404,DSA,Data Structures and Algorithms,18.29,,2.24,,,,,,,,,,,,,86.2,4.52,0.0,True,level1
+SYN04328,CN,Computer Networks,39.15,50.0,10.0,6.86,,,,,,,,,,,,76.2,7.52,6.6,True,level2
+SYN03028,OOP,Object Oriented Programming,30.2,,9.96,,,,,,,,,,,,,75.7,6.86,11.2,True,level1
+SYN03847,CN,Computer Networks,22.09,,4.33,,,,,,,,,,,,,70.8,4.87,18.3,True,level1
+SYN02327,OOP,Object Oriented Programming,26.73,25.65,5.25,6.06,,,,,,,,,,,,60.0,6.67,8.9,True,level2
+SYN02550,OOP,Object Oriented Programming,44.95,,10.0,,,,,,,,,,,,,69.1,8.75,11.4,True,level1
+SYN02738,DSA,Data Structures and Algorithms,39.92,,7.32,,,,,,,,,,,,,71.7,7.08,7.0,True,level1
+SYN00631,DBMS,Database Systems,30.91,28.81,6.39,6.12,9.07,8.01,7.47,9.12,,5.46,8.35,7.67,7.47,6.91,6.11,93.4,7.17,12.7,True,level3
+SYN00485,DSA,Data Structures and Algorithms,34.84,35.44,7.87,8.04,,,,,,,,,,,,84.2,7.78,10.5,True,level2
+SYN01040,OS,Operating Systems,43.63,39.27,9.42,7.05,,,,,,,,,,,,72.0,7.69,12.5,True,level2
+SYN02506,JAVA,Java Programming,41.99,43.48,5.49,6.99,6.66,8.1,6.98,9.2,10.0,7.24,7.84,7.01,8.3,8.57,8.52,70.5,7.21,4.6,True,level3
+SYN00239,SE,Software Engineering,44.05,33.18,8.97,9.89,9.87,10.0,9.55,8.41,8.06,9.2,5.94,8.41,6.0,10.0,8.84,99.2,7.58,10.8,True,level3
+SYN02394,SE,Software Engineering,23.39,29.34,6.19,4.08,3.91,,6.73,7.41,5.26,8.07,6.2,2.95,4.55,7.83,3.21,87.0,5.81,9.3,True,level3
+SYN02085,OOP,Object Oriented Programming,34.73,31.8,5.6,8.18,,,,,,,,,,,,76.2,4.97,8.0,True,level2
+SYN04671,OOP,Object Oriented Programming,37.29,21.83,7.61,8.16,3.9,7.84,8.1,7.31,8.37,6.22,,8.72,9.15,8.5,5.54,76.7,6.47,12.3,True,level3
+SYN01902,JAVA,Java Programming,50.0,50.0,10.0,9.53,,,,,,,,,,,,100.0,7.75,8.6,True,level2
+SYN00403,OOP,Object Oriented Programming,30.38,33.45,6.37,5.51,2.38,7.69,6.73,,6.41,8.18,8.39,,8.87,3.7,7.97,56.1,5.94,3.7,True,level3
+SYN01150,DBMS,Database Systems,43.65,,6.96,,,,,,,,,,,,,100.0,6.98,6.5,True,level1
+SYN02592,DBMS,Database Systems,24.22,27.15,4.81,6.79,5.87,6.64,6.22,6.5,,9.4,6.71,8.23,7.81,5.44,4.97,73.0,4.97,7.4,True,level3
+SYN03853,OS,Operating Systems,41.67,,8.3,,,,,,,,,,,,,88.0,7.42,1.7,True,level1
+SYN01386,CN,Computer Networks,27.15,39.97,9.06,8.54,,,,,,,,,,,,80.7,6.56,10.8,True,level2
+SYN03376,OOP,Object Oriented Programming,42.11,50.0,7.77,7.43,9.13,10.0,5.02,8.88,7.82,9.09,8.95,8.49,8.52,,8.91,78.9,8.21,6.3,True,level3
+SYN00688,OS,Operating Systems,14.94,20.81,7.57,6.24,,,,,,,,,,,,78.9,6.1,9.2,True,level2
+SYN04066,OOP,Object Oriented Programming,25.54,,2.96,,,,,,,,,,,,,65.9,5.06,9.0,True,level1
+SYN04991,OS,Operating Systems,23.24,31.4,2.18,6.19,5.2,1.59,,,6.36,6.79,6.87,,6.07,6.19,5.94,72.5,4.5,6.5,True,level3
+SYN04386,OOP,Object Oriented Programming,18.15,3.77,1.92,6.94,,,,,,,,,,,,51.2,3.6,6.1,True,level2
+SYN04444,JAVA,Java Programming,50.0,,9.09,,,,,,,,,,,,,95.8,10.0,12.8,True,level1
+SYN04864,DSA,Data Structures and Algorithms,39.66,28.8,5.36,10.0,,,,,,,,,,,,69.6,6.9,2.5,True,level2
+SYN00193,DBMS,Database Systems,32.04,36.02,5.88,8.79,9.57,5.78,7.42,,6.99,6.58,6.22,,6.84,6.28,4.55,69.4,6.67,10.8,True,level3
+SYN03191,DSA,Data Structures and Algorithms,26.25,,5.26,,,,,,,,,,,,,85.9,5.91,2.9,True,level1
+SYN03817,DSA,Data Structures and Algorithms,18.85,23.29,5.2,5.28,,,,,,,,,,,,82.7,5.32,0.0,True,level2
+SYN04496,SE,Software Engineering,24.96,25.29,9.21,7.95,5.83,7.41,7.25,5.18,7.29,5.84,7.76,6.74,,,5.78,82.9,5.85,8.7,True,level3
+SYN02650,CN,Computer Networks,22.36,,4.19,,,,,,,,,,,,,92.4,3.97,7.2,True,level1
+SYN02406,DSA,Data Structures and Algorithms,35.32,46.8,4.48,9.51,,,,,,,,,,,,76.3,8.14,10.0,True,level2
+SYN02342,JAVA,Java Programming,42.39,38.13,7.37,6.06,7.82,7.43,7.84,7.81,,,7.4,,6.78,4.95,7.88,85.8,7.19,13.7,True,level3
+SYN00385,STAT,Statistics for Engineers,36.05,37.55,6.34,5.81,8.06,7.87,9.25,5.42,8.37,,,7.83,,6.32,7.57,59.8,6.98,10.0,True,level3
+SYN02191,DBMS,Database Systems,18.59,,3.1,,,,,,,,,,,,,65.0,4.05,7.3,True,level1
+SYN04584,OS,Operating Systems,23.21,35.4,5.85,5.17,,,,,,,,,,,,76.6,6.08,3.5,True,level2
+SYN02898,JAVA,Java Programming,33.82,21.95,5.13,5.89,5.64,4.88,5.39,6.3,,5.87,5.21,6.55,4.9,10.0,6.96,89.7,6.07,3.5,True,level3
+SYN02352,DBMS,Database Systems,3.18,0.0,3.26,5.32,2.56,0.69,3.29,2.75,3.0,2.89,4.41,4.19,,,4.63,61.6,3.4,2.0,True,level3
+SYN01855,DBMS,Database Systems,50.0,,7.24,,,,,,,,,,,,,74.2,5.77,10.7,True,level1
+SYN00343,OS,Operating Systems,37.37,50.0,7.74,9.32,8.95,8.06,8.32,9.6,8.97,7.9,8.51,7.55,9.13,10.0,8.53,79.0,9.58,11.4,True,level3
+SYN02341,DBMS,Database Systems,48.85,45.76,9.91,10.0,6.22,9.04,,9.53,6.78,7.41,6.55,7.68,10.0,8.42,,88.3,8.62,11.9,True,level3
+SYN02118,JAVA,Java Programming,37.69,50.0,5.5,5.11,5.15,4.56,8.31,7.26,3.39,6.47,7.54,5.04,7.08,6.59,6.04,87.5,6.7,0.3,True,level3
+SYN01104,OS,Operating Systems,32.54,,2.98,,,,,,,,,,,,,99.5,5.85,3.6,True,level1
+SYN00638,DSA,Data Structures and Algorithms,5.62,2.57,5.02,5.51,,,,,,,,,,,,67.0,3.36,2.6,True,level2
+SYN01741,OS,Operating Systems,21.97,37.85,7.46,4.61,,,,,,,,,,,,77.2,6.44,6.5,True,level2

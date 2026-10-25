@@ -1,0 +1,81 @@
+# ==============================================================================
+# STUDENT ACADEMIC COMPANION - ROOT .GITIGNORE
+# ==============================================================================
+
+# Environment variables & secrets (CRITICAL: Never commit secrets)
+.env
+.env.*
+*.env
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+!*.env.example
+
+# Database Backups & sensitive data dumps
+backups/
+**/backups/
+*.dump
+*.bson
+*.json.gz
+
+# Python virtual environments & bytecode
+.venv/
+venv/
+ENV/
+env/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+*.pyo
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node.js & Next.js build outputs & dependencies
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+out/
+**/out/
+.vercel/
+**/.vercel/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tsbuildinfo
+
+# Java / Maven build outputs & caches
+target/
+**/target/
+.mvn/wrapper/maven-wrapper.jar
+*.class
+*.jar
+*.war
+*.ear
+
+# IDE & Editor configuration
+.idea/
+**/.idea/
+.vscode/
+**/.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+.springBeans
+.sts4-cache/
+*.iml
+*.iws
+*.ipr
+
+# Operating System files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini

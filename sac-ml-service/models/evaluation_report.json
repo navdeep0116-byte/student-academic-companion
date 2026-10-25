@@ -1,0 +1,71 @@
+{
+  "level1": {
+    "stage": "level1",
+    "target": "overallScore /100",
+    "features": [
+      "courseCode",
+      "attendancePercentage",
+      "previousCgpa",
+      "weeklyStudyHours",
+      "cat1",
+      "quiz1"
+    ],
+    "trainRows": 32000,
+    "testRows": 8000,
+    "mae": 4.678,
+    "rmse": 5.908,
+    "r2": 0.8562,
+    "note": "Synthetic-data evaluation only; not real-world validated."
+  },
+  "level2": {
+    "stage": "level2",
+    "target": "overallScore /100",
+    "features": [
+      "courseCode",
+      "attendancePercentage",
+      "previousCgpa",
+      "weeklyStudyHours",
+      "cat1",
+      "cat2",
+      "quiz1",
+      "quiz2"
+    ],
+    "trainRows": 32000,
+    "testRows": 8000,
+    "mae": 3.384,
+    "rmse": 4.296,
+    "r2": 0.9239,
+    "note": "Synthetic-data evaluation only; not real-world validated."
+  },
+  "level3": {
+    "stage": "level3",
+    "target": "overallScore /100",
+    "features": [
+      "courseCode",
+      "attendancePercentage",
+      "previousCgpa",
+      "weeklyStudyHours",
+      "cat1",
+      "cat2",
+      "quiz1",
+      "quiz2",
+      "quiz3",
+      "lab1",
+      "lab2",
+      "lab3",
+      "lab4",
+      "lab5",
+      "lab6",
+      "lab7",
+      "lab8",
+      "lab9",
+      "lab10"
+    ],
+    "trainRows": 32000,
+    "testRows": 8000,
+    "mae": 2.337,
+    "rmse": 2.975,
+    "r2": 0.9635,
+    "note": "Synthetic-data evaluation only; not real-world validated."
+  }
+}
