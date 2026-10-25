@@ -81,4 +81,3 @@ gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 90 --max-request
 - **`--timeout 90`**: Accommodates lazy model loading (~1.5s cold start) and prevents worker timeout restarts during model deserialization.
 - **`--max-requests 500` & `--max-requests-jitter 50`**: Periodically recycles the worker process to prevent Python heap fragmentation over long uptimes.
 - **Single-Model Cache**: `app.py` enforces retaining at most 1 model in memory at a time. Switching levels unloads the previously active model, invokes `gc.collect()`, and loads the new model, maintaining RAM usage at ~306–310 MB.
-
