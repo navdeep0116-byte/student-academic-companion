@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -53,14 +54,51 @@ class MlPredictionServiceTest {
 
     @Test
     void testDetermineEligibleStage_Level3() {
-        Map<String, Double> marks = Map.of(
+        Map<String, Double> marksWithoutLabs = Map.of(
                 "cat1", 35.0,
                 "quiz1", 8.0,
                 "cat2", 40.0,
                 "quiz2", 9.0,
                 "quiz3", 8.5
         );
-        assertEquals("level3", service.determineEligibleStage(marks));
+        // Without 10 labs, highest eligible stage is level2
+        assertEquals("level2", service.determineEligibleStage(marksWithoutLabs));
+
+        // With all 10 labs, level3 is satisfied
+        Map<String, Double> marksWithLabs = new java.util.HashMap<>(marksWithoutLabs);
+        for (int i = 1; i <= 10; i++) {
+            marksWithLabs.put("lab" + i, 8.0);
+        }
+        assertEquals("level3", service.determineEligibleStage(marksWithLabs));
+    }
+
+    @Test
+    void testCheckLevelEligibility_ZeroMarksAreValid() {
+        // Legitimate zero marks
+        Map<String, Double> marks = Map.of(
+                "cat1", 0.0,
+                "quiz1", 0.0
+        );
+        var res = service.checkLevelEligibility("level1", marks, Set.of("level1", "level2", "level3"));
+        assertTrue(res.isEligible(), "Legitimate 0 marks must be eligible");
+        assertNull(res.getReason());
+    }
+
+    @Test
+    void testCheckLevelEligibility_MissingInputs() {
+        Map<String, Double> marks = Map.of("cat1", 35.0);
+        var res = service.checkLevelEligibility("level1", marks, Set.of("level1", "level2", "level3"));
+        assertFalse(res.isEligible());
+        assertTrue(res.getMissingInputs().contains("Quiz 1"));
+        assertNotNull(res.getReason());
+    }
+
+    @Test
+    void testCheckLevelEligibility_ModelUnavailable() {
+        Map<String, Double> marks = Map.of("cat1", 35.0, "quiz1", 8.0);
+        var res = service.checkLevelEligibility("level1", marks, Set.of("level2", "level3")); // level1 missing
+        assertFalse(res.isEligible());
+        assertTrue(res.getReason().contains("Model file"));
     }
 
     @Test

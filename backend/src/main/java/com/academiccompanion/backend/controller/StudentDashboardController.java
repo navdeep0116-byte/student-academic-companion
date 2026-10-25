@@ -1,6 +1,9 @@
 package com.academiccompanion.backend.controller;
 
+import com.academiccompanion.backend.dto.CourseLevelAvailabilityDto;
 import com.academiccompanion.backend.dto.CoursePredictionDto;
+import com.academiccompanion.backend.dto.PredictRequestDto;
+import com.academiccompanion.backend.dto.PredictionAvailabilityResponse;
 import com.academiccompanion.backend.dto.PredictionResponse;
 import com.academiccompanion.backend.model.*;
 import com.academiccompanion.backend.repository.*;
@@ -11,7 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
@@ -136,8 +142,51 @@ public class StudentDashboardController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/prediction")
+    @GetMapping({"/prediction/availability", "/predictions/availability"})
+    public ResponseEntity<?> predictionAvailability(Authentication authentication) {
+        Student student = resolveAuthenticatedStudent(authentication);
+        if (student == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "A valid student login is required"));
+        }
+
+        ObjectId studentObjectId = student.getId() != null && ObjectId.isValid(student.getId()) ? new ObjectId(student.getId()) : null;
+        ObjectId userObjectId = student.getUserId();
+
+        List<Enrollment> enrollments = findStudentEnrollments(studentObjectId, userObjectId);
+        List<AssessmentResult> allResults = findStudentResults(studentObjectId, userObjectId);
+
+        boolean healthy = mlPredictionService.isHealthy();
+        Set<String> availableModels = healthy ? mlPredictionService.getAvailableModelLevels() : Collections.emptySet();
+
+        List<CourseLevelAvailabilityDto> courseAvailabilities = new ArrayList<>();
+        for (Enrollment enrollment : enrollments) {
+            Course course = resolveCourse(enrollment);
+            List<AssessmentResult> courseResults = filterResultsForCourse(allResults, enrollment, course);
+            courseAvailabilities.add(mlPredictionService.getCourseLevelAvailability(course, courseResults, availableModels));
+        }
+
+        PredictionAvailabilityResponse response = new PredictionAvailabilityResponse(
+                student.getId(),
+                student.getStudentNumber(),
+                student.getFullName(),
+                healthy,
+                new ArrayList<>(availableModels),
+                courseAvailabilities
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
     public ResponseEntity<?> prediction(Authentication authentication) {
+        return prediction(authentication, null, null);
+    }
+
+    @GetMapping("/prediction")
+    public ResponseEntity<?> prediction(
+            Authentication authentication,
+            @RequestParam(value = "courseCode", required = false) String courseCode,
+            @RequestParam(value = "level", required = false) String level) {
         Student student = resolveAuthenticatedStudent(authentication);
         if (student == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -152,6 +201,36 @@ public class StudentDashboardController {
         List<AttendanceRecord> allAttendance = findStudentAttendance(studentObjectId, userObjectId);
 
         boolean healthy = mlPredictionService.isHealthy();
+
+        // If specific courseCode and level requested
+        if (courseCode != null && !courseCode.isBlank() && level != null && !level.isBlank()) {
+            Enrollment matchedEnrollment = null;
+            Course matchedCourse = null;
+            for (Enrollment enrollment : enrollments) {
+                Course course = resolveCourse(enrollment);
+                if (course != null && course.getCode() != null && course.getCode().equalsIgnoreCase(courseCode.trim())) {
+                    matchedEnrollment = enrollment;
+                    matchedCourse = course;
+                    break;
+                }
+            }
+            if (matchedCourse == null) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("error", "Student is not enrolled in course " + courseCode));
+            }
+            List<AssessmentResult> courseResults = filterResultsForCourse(allResults, matchedEnrollment, matchedCourse);
+            AttendanceRecord courseAttendance = filterAttendanceForCourse(allAttendance, matchedEnrollment, matchedCourse);
+            CoursePredictionDto pred = mlPredictionService.predictForCourseWithLevel(
+                    matchedCourse,
+                    courseResults,
+                    courseAttendance,
+                    student.getPreviousCgpa(),
+                    level.trim(),
+                    null
+            );
+            return ResponseEntity.ok(pred);
+        }
+
         List<CoursePredictionDto> predictions = new ArrayList<>();
         int predictableCount = 0;
 
@@ -161,7 +240,20 @@ public class StudentDashboardController {
             List<AssessmentResult> courseResults = filterResultsForCourse(allResults, enrollment, course);
             AttendanceRecord courseAttendance = filterAttendanceForCourse(allAttendance, enrollment, course);
 
-            CoursePredictionDto pred = mlPredictionService.predictForCourse(course, courseResults, courseAttendance, null);
+            CoursePredictionDto pred;
+            if (level != null && !level.isBlank()) {
+                pred = mlPredictionService.predictForCourseWithLevel(
+                        course,
+                        courseResults,
+                        courseAttendance,
+                        student.getPreviousCgpa(),
+                        level.trim().toLowerCase(Locale.ROOT),
+                        null
+                );
+            } else {
+                pred = mlPredictionService.predictForCourse(course, courseResults, courseAttendance, student.getPreviousCgpa());
+            }
+
             if ("AVAILABLE".equals(pred.getPredictionStatus())) {
                 predictableCount++;
             }
@@ -180,6 +272,59 @@ public class StudentDashboardController {
         );
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/prediction")
+    public ResponseEntity<?> predictLevel(
+            Authentication authentication,
+            @RequestBody PredictRequestDto request) {
+        Student student = resolveAuthenticatedStudent(authentication);
+        if (student == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "A valid student login is required"));
+        }
+
+        if (request == null || request.getCourseCode() == null || request.getLevel() == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "courseCode and level are required."));
+        }
+
+        ObjectId studentObjectId = student.getId() != null && ObjectId.isValid(student.getId()) ? new ObjectId(student.getId()) : null;
+        ObjectId userObjectId = student.getUserId();
+
+        List<Enrollment> enrollments = findStudentEnrollments(studentObjectId, userObjectId);
+        Enrollment matchedEnrollment = null;
+        Course matchedCourse = null;
+
+        for (Enrollment enrollment : enrollments) {
+            Course course = resolveCourse(enrollment);
+            if (course != null && course.getCode() != null && course.getCode().equalsIgnoreCase(request.getCourseCode().trim())) {
+                matchedEnrollment = enrollment;
+                matchedCourse = course;
+                break;
+            }
+        }
+
+        if (matchedCourse == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "Student is not enrolled in course " + request.getCourseCode()));
+        }
+
+        List<AssessmentResult> allResults = findStudentResults(studentObjectId, userObjectId);
+        List<AttendanceRecord> allAttendance = findStudentAttendance(studentObjectId, userObjectId);
+
+        List<AssessmentResult> courseResults = filterResultsForCourse(allResults, matchedEnrollment, matchedCourse);
+        AttendanceRecord courseAttendance = filterAttendanceForCourse(allAttendance, matchedEnrollment, matchedCourse);
+
+        CoursePredictionDto prediction = mlPredictionService.predictForCourseWithLevel(
+                matchedCourse,
+                courseResults,
+                courseAttendance,
+                student.getPreviousCgpa(),
+                request.getLevel().trim(),
+                request.getWhatIfMarks()
+        );
+
+        return ResponseEntity.ok(prediction);
     }
 
     @GetMapping("/marks")
@@ -212,6 +357,42 @@ public class StudentDashboardController {
             }
         }
 
+        Map<String, Double> calculatedAvgMap = new HashMap<>();
+        Map<String, Integer> submissionsCountMap = new HashMap<>();
+        if (mongoTemplate != null && !assessmentIds.isEmpty()) {
+            Set<ObjectId> aidObjectIds = new HashSet<>();
+            for (String aid : assessmentIds) {
+                if (ObjectId.isValid(aid)) aidObjectIds.add(new ObjectId(aid));
+            }
+            if (!aidObjectIds.isEmpty()) {
+                org.springframework.data.mongodb.core.query.Query q = new org.springframework.data.mongodb.core.query.Query(
+                        org.springframework.data.mongodb.core.query.Criteria.where("assessmentId").in(aidObjectIds)
+                );
+                List<org.bson.Document> classResults = mongoTemplate.find(q, org.bson.Document.class, "results");
+                Map<String, List<Double>> marksByAid = new HashMap<>();
+                for (org.bson.Document doc : classResults) {
+                    if ("PENDING".equalsIgnoreCase(doc.getString("status"))) continue;
+                    Double m = toDouble(doc.get("obtainedMarks"));
+                    if (m == null) m = toDouble(doc.get("marksObtained"));
+                    Object aObj = doc.get("assessmentId");
+                    String aStr = aObj instanceof ObjectId oid ? oid.toHexString() : (aObj != null ? aObj.toString() : null);
+                    if (m != null && aStr != null) {
+                        marksByAid.computeIfAbsent(aStr, k -> new ArrayList<>()).add(m);
+                    }
+                }
+                for (Map.Entry<String, List<Double>> entry : marksByAid.entrySet()) {
+                    List<Double> mList = entry.getValue();
+                    if (!mList.isEmpty()) {
+                        double sum = 0.0;
+                        for (Double d : mList) sum += d;
+                        double avg = Math.round((sum / mList.size()) * 10.0) / 10.0;
+                        calculatedAvgMap.put(entry.getKey(), avg);
+                        submissionsCountMap.put(entry.getKey(), mList.size());
+                    }
+                }
+            }
+        }
+
         List<Map<String, Object>> courseMarksList = new ArrayList<>();
 
         for (Enrollment enrollment : enrollments) {
@@ -220,7 +401,7 @@ public class StudentDashboardController {
 
             List<Map<String, Object>> enrichedAssessments = new ArrayList<>();
             for (AssessmentResult r : courseResults) {
-                enrichedAssessments.add(enrichAssessmentResult(r, assessmentMap));
+                enrichedAssessments.add(enrichAssessmentResult(r, assessmentMap, calculatedAvgMap, submissionsCountMap));
             }
 
             Map<String, Object> courseData = new LinkedHashMap<>();
@@ -419,7 +600,11 @@ public class StudentDashboardController {
         return null;
     }
 
-    private Map<String, Object> enrichAssessmentResult(AssessmentResult res, Map<String, Assessment> assessmentMap) {
+    private Map<String, Object> enrichAssessmentResult(
+            AssessmentResult res,
+            Map<String, Assessment> assessmentMap,
+            Map<String, Double> calculatedAvgMap,
+            Map<String, Integer> submissionsCountMap) {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("id", res.getId());
         map.put("assessmentId", res.getAssessmentId() != null ? res.getAssessmentId().toHexString() : null);
@@ -439,8 +624,15 @@ public class StudentDashboardController {
         String aKey = res.getAssessmentId() != null ? res.getAssessmentId().toHexString() : null;
         Assessment assess = aKey != null ? assessmentMap.get(aKey) : null;
 
-        Double classAverage = assess != null ? assess.getClassAverage() : null;
+        Double officialAvg = assess != null ? assess.getClassAverage() : null;
+        Double dynamicAvg = aKey != null ? calculatedAvgMap.get(aKey) : null;
+        Double classAverage = officialAvg != null ? officialAvg : dynamicAvg;
+        Integer submissionsCount = aKey != null ? submissionsCountMap.get(aKey) : null;
+
         map.put("classAverage", classAverage);
+        map.put("officialClassAverage", officialAvg);
+        map.put("calculatedClassAverage", dynamicAvg);
+        map.put("submissionsCount", submissionsCount);
 
         String name = (res.getAssessmentName() != null ? res.getAssessmentName() : "").toUpperCase(Locale.ROOT);
         String type = (res.getAssessmentType() != null ? res.getAssessmentType() : "").toUpperCase(Locale.ROOT);
@@ -484,5 +676,15 @@ public class StudentDashboardController {
         }
 
         return map;
+    }
+
+    private Double toDouble(Object obj) {
+        if (obj == null) return null;
+        if (obj instanceof Number num) return num.doubleValue();
+        try {
+            return Double.parseDouble(obj.toString());
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 }

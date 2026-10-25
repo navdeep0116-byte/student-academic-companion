@@ -4,9 +4,9 @@ import { useEffect, useState } from "react"
 
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
-import { AlertTriangle, BarChart3, BookOpen, CalendarDays, CheckCircle2, ClipboardList, Eye, EyeOff, GraduationCap, LayoutDashboard, LogOut, Menu, Settings, ShieldCheck, Sparkles, TrendingUp, UserRound, Users, X } from "lucide-react"
+import { AlertTriangle, BarChart3, BookOpen, CalendarDays, Check, CheckCircle2, ClipboardList, Eye, EyeOff, GraduationCap, Info, Layers, LayoutDashboard, Lock, LogOut, Menu, Settings, ShieldCheck, Sparkles, TrendingUp, UserRound, Users, X } from "lucide-react"
 
-import { academicApi, authApi, type LiveAssessment, type LiveCourseMarks, type StudentMarksResponse, type LiveCourseAttendance, type StudentAttendanceResponse, type PredictionResponse, type CoursePrediction, type StudentDashboardResponse } from "@/lib/api-client"
+import { academicApi, authApi, type LiveAssessment, type LiveCourseMarks, type StudentMarksResponse, type LiveCourseAttendance, type StudentAttendanceResponse, type PredictionResponse, type CoursePrediction, type StudentDashboardResponse, type PredictionAvailabilityResponse, type CourseLevelAvailability, type LevelEligibility } from "@/lib/api-client"
 
 import { AdminDashboard } from "@/components/admin-dashboard"
 
@@ -207,6 +207,42 @@ const nav = { student: [["Overview", LayoutDashboard], ["Marks & Results", Clipb
 
 function Sidebar({ role, active, setActive, logout, open, close }: { role: Role; active: Page; setActive: (x: Page) => void; logout: () => void; open: boolean; close: () => void }) { return <aside className={`fixed inset-y-0 left-0 z-20 flex w-72 flex-col border-r bg-sidebar p-5 transition-transform lg:static lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}><div className="flex items-center justify-between"><div className="flex items-center gap-3"><div className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground"><GraduationCap /></div><b>SAC</b></div><button onClick={close} className="lg:hidden"><X /></button></div><div className="mt-10 flex flex-col gap-1">{nav[role].map(([label, Icon]) => <button key={label} onClick={() => { setActive(label as Page); close() }} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium ${active === label ? "bg-sidebar-accent text-sidebar-accent-foreground" : "text-sidebar-foreground/70 hover:bg-sidebar-accent"}`}><Icon />{label}</button>)}</div><div className="mt-auto flex flex-col gap-1"><button onClick={() => { setActive("Settings"); close() }} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent"><Settings />Settings</button><button onClick={logout} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent"><LogOut />Sign out</button></div></aside> }
 
+interface PerformanceChartPayload {
+  name: string
+  courseName: string
+  value: number | null
+  scoreDisplay: string
+  evaluationsCount: number
+  totalEvaluations: number
+  statusText: string
+  hasData: boolean
+}
+
+function CustomPerformanceTooltip({ active, payload }: { active?: boolean; payload?: Array<{ payload: PerformanceChartPayload }> }) {
+  if (!active || !payload || !payload.length) return null
+  const data = payload[0].payload
+  return (
+    <div className="rounded-xl border bg-popover/95 p-3 shadow-md backdrop-blur-sm text-xs">
+      <p className="font-semibold text-foreground text-sm">{data.name}</p>
+      <p className="text-muted-foreground mb-2">{data.courseName}</p>
+      <div className="flex items-center justify-between gap-3 border-t pt-1.5">
+        <span className="text-muted-foreground">Current score:</span>
+        <span className="font-bold text-primary font-mono text-xs">{data.scoreDisplay}</span>
+      </div>
+      <div className="flex items-center justify-between gap-3 pt-1">
+        <span className="text-muted-foreground">Graded evaluations:</span>
+        <span className="font-medium text-foreground">{data.evaluationsCount} / {data.totalEvaluations} completed</span>
+      </div>
+      <div className="flex items-center justify-between gap-3 pt-1">
+        <span className="text-muted-foreground">Status:</span>
+        <span className={`font-semibold ${data.hasData ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}`}>
+          {data.statusText}
+        </span>
+      </div>
+    </div>
+  )
+}
+
 function Overview({ go, name }: { go: (p: Page) => void; name: string }) {
   const [dashboard, setDashboard] = useState<StudentDashboardResponse | null>(null)
   const [attendanceData, setAttendanceData] = useState<StudentAttendanceResponse | null>(null)
@@ -245,15 +281,29 @@ function Overview({ go, name }: { go: (p: Page) => void; name: string }) {
     : []
 
   const hasMarksRecords = Boolean(marksData?.courses && marksData.courses.length > 0)
-  const performanceChartData = hasMarksRecords
-    ? marksData!.courses.map(c => {
-        const calc = calculateCourseRecordedScore(c)
-        return {
-          name: c.courseCode,
-          value: calc.scoreValue ? Math.round((calc.scoreValue / 10) * 10) / 10 : 0
-        }
-      })
-    : []
+  const courseCalculations = (marksData?.courses || []).map(c => {
+    const calc = calculateCourseRecordedScore(c)
+    return {
+      courseCode: c.courseCode,
+      courseName: c.courseName,
+      calc,
+      score: calc.scoreValue,
+      hasCompletedEvaluations: calc.scoreValue !== null,
+    }
+  })
+
+  const hasAnyEvaluations = courseCalculations.some(c => c.hasCompletedEvaluations)
+
+  const performanceChartData = courseCalculations.map(c => ({
+    name: c.courseCode,
+    courseName: c.courseName,
+    value: c.score != null ? c.score : null,
+    scoreDisplay: c.score != null ? `${c.score.toFixed(1)}%` : "No data yet",
+    evaluationsCount: c.calc.completedAssessmentsCount,
+    totalEvaluations: c.calc.totalAssessmentsCount,
+    statusText: c.calc.isComplete ? "Final" : c.score != null ? "In progress" : "No evaluations",
+    hasData: c.score != null,
+  }))
 
   const hasEnrollments = (dashboard?.totalCourses ?? 0) > 0
   const riskStatus = !hasEnrollments
@@ -275,8 +325,8 @@ function Overview({ go, name }: { go: (p: Page) => void; name: string }) {
     {
       icon: GraduationCap,
       label: "Previous CGPA",
-      value: dashboard?.previousCgpa != null ? `${Number(dashboard.previousCgpa).toFixed(2)} / 10` : "Not recorded",
-      note: dashboard?.previousCgpa != null ? "Historical cumulative GPA" : "Historical record pending",
+      value: dashboard?.previousCgpa != null ? `${Number(dashboard.previousCgpa).toFixed(2)} / 10` : "Historical record unavailable",
+      note: dashboard?.previousCgpa != null ? "Historical cumulative GPA" : "Historical record unavailable",
       targetPage: "Profile",
     },
     {
@@ -328,17 +378,41 @@ function Overview({ go, name }: { go: (p: Page) => void; name: string }) {
       </div>
       <div className="grid gap-5 xl:grid-cols-[1.35fr_1fr]">
         <div className={card}>
-          <h3 className="font-semibold">Current-semester snapshot</h3>
-          <p className="mt-1 text-sm text-muted-foreground">Assessment performance across enrolled courses</p>
+          <div className="flex items-start justify-between">
+            <div>
+              <h3 className="font-semibold">Current-semester snapshot</h3>
+              <p className="mt-1 text-sm text-muted-foreground">Assessment performance across enrolled courses (0–100%)</p>
+            </div>
+            {hasAnyEvaluations && (
+              <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
+                Weighted Scale
+              </span>
+            )}
+          </div>
           <div className="mt-5 h-64">
-            {hasMarksRecords && performanceChartData.length > 0 ? (
+            {hasMarksRecords && hasAnyEvaluations ? (
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={performanceChartData}>
+                <AreaChart data={performanceChartData} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#2563eb" stopOpacity={0.35} />
+                      <stop offset="95%" stopColor="#2563eb" stopOpacity={0.02} />
+                    </linearGradient>
+                  </defs>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="name" />
-                  <YAxis domain={[0, 10]} />
-                  <Tooltip />
-                  <Area type="monotone" dataKey="value" stroke="#2563eb" fill="#dbeafe" strokeWidth={3} />
+                  <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                  <YAxis domain={[0, 100]} ticks={[0, 25, 50, 75, 100]} tickFormatter={(v) => `${v}%`} tick={{ fontSize: 11 }} />
+                  <Tooltip content={<CustomPerformanceTooltip />} />
+                  <Area
+                    type="monotone"
+                    dataKey="value"
+                    stroke="#2563eb"
+                    fill="url(#scoreGradient)"
+                    strokeWidth={2.5}
+                    dot={{ r: 4, stroke: "#2563eb", strokeWidth: 2, fill: "#ffffff" }}
+                    activeDot={{ r: 6, stroke: "#1d4ed8", strokeWidth: 2, fill: "#2563eb" }}
+                    connectNulls={false}
+                  />
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
@@ -349,6 +423,20 @@ function Overview({ go, name }: { go: (p: Page) => void; name: string }) {
               </div>
             )}
           </div>
+          {hasMarksRecords && (
+            <div className="mt-3 flex flex-wrap gap-2 border-t pt-3">
+              {performanceChartData.map(item => (
+                <div key={item.name} className="flex items-center gap-1.5 rounded-lg border bg-muted/30 px-2.5 py-1 text-xs">
+                  <span className="font-semibold text-foreground">{item.name}:</span>
+                  {item.hasData ? (
+                    <span className="font-mono font-bold text-primary">{item.scoreDisplay}</span>
+                  ) : (
+                    <span className="text-muted-foreground italic">No data yet</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
         <div className={card}>
           <h3 className="font-semibold">Attendance by course</h3>
@@ -1023,49 +1111,93 @@ function PerformancePage() {
 
 function PredictionsPage() {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<import("@/lib/api-client").PredictionResponse | null>(null);
+  const [switchingLevel, setSwitchingLevel] = useState(false);
+  const [data, setData] = useState<PredictionResponse | null>(null);
+  const [availability, setAvailability] = useState<PredictionAvailabilityResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  function loadPredictions() {
-    setLoading(true);
+  // Default to Level 1 when page opens, or respect persisted student preference if present
+  const [globalLevel, setGlobalLevel] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      const persisted = sessionStorage.getItem("sac_prediction_level");
+      if (persisted && ["level1", "level2", "level3"].includes(persisted)) {
+        return persisted;
+      }
+    }
+    return "level1";
+  });
+
+  const LEVEL_CONFIGS = [
+    {
+      id: "level1",
+      label: "Level 1",
+      title: "Early Forecast",
+      badge: "CAT 1 + Quiz 1",
+      summary: "Baseline theory forecast after early semester evaluations.",
+      inputs: ["cat1", "quiz1"],
+    },
+    {
+      id: "level2",
+      label: "Level 2",
+      title: "Mid-Semester",
+      badge: "CAT 1 & 2 + Quiz 1 & 2",
+      summary: "Refined forecast incorporating mid-term continuous assessments.",
+      inputs: ["cat1", "cat2", "quiz1", "quiz2"],
+    },
+    {
+      id: "level3",
+      label: "Level 3",
+      title: "Pre-FAT Comprehensive",
+      badge: "Quizzes 1–3 + 10 Labs",
+      summary: "Full internal continuous assessment forecast before final FAT examinations.",
+      inputs: ["cat1", "cat2", "quiz1", "quiz2", "quiz3", ...Array.from({ length: 10 }, (_, i) => `lab${i + 1}`)],
+    },
+  ];
+
+  function loadPredictionsForLevel(levelToLoad: string, isInitial = false) {
+    if (isInitial) {
+      setLoading(true);
+    } else {
+      setSwitchingLevel(true);
+    }
     setError(null);
-    academicApi.prediction()
-      .then((res) => {
-        setData(res);
+
+    Promise.all([
+      academicApi.prediction(levelToLoad),
+      academicApi.predictionAvailability().catch(() => null),
+    ])
+      .then(([predRes, availRes]) => {
+        setData(predRes);
+        setAvailability(availRes);
         setLoading(false);
+        setSwitchingLevel(false);
       })
       .catch((err) => {
         setError(err instanceof Error ? err.message : "Failed to load predictions");
         setLoading(false);
+        setSwitchingLevel(false);
       });
   }
 
   useEffect(() => {
-    let cancelled = false;
-    academicApi.prediction()
-      .then((res) => {
-        if (!cancelled) {
-          setData(res);
-          setLoading(false);
-        }
-      })
-      .catch((err) => {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Failed to load predictions");
-          setLoading(false);
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
+    loadPredictionsForLevel(globalLevel, true);
   }, []);
+
+  function handleSelectGlobalLevel(newLevel: string) {
+    if (newLevel === globalLevel && data) return;
+    setGlobalLevel(newLevel);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("sac_prediction_level", newLevel);
+    }
+    loadPredictionsForLevel(newLevel, false);
+  }
 
   return (
     <div className="flex flex-col gap-6">
       <div>
         <h2 className="mt-3 text-3xl font-semibold">Academic predictions</h2>
         <p className="mt-2 text-muted-foreground">
-          Machine learning forecasts generated from verified course assessment marks. Values predict final overall course score out of 100 (never FAT marks).
+          Machine learning forecasts generated from verified course assessment marks. Select an eligible prediction level above to evaluate your trajectory across all enrolled courses. Overall scores predict performance out of 100 (FAT marks strictly excluded).
         </p>
       </div>
 
@@ -1073,7 +1205,7 @@ function PredictionsPage() {
         <div className={`${card} flex items-center justify-center p-12 text-sm text-muted-foreground`}>
           <div className="flex items-center gap-3">
             <span className="size-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-            <span>Fetching live ML course predictions from academic service…</span>
+            <span>Fetching live ML course predictions for {globalLevel.toUpperCase()}…</span>
           </div>
         </div>
       )}
@@ -1094,7 +1226,7 @@ function PredictionsPage() {
               </div>
             </div>
             <button
-              onClick={loadPredictions}
+              onClick={() => loadPredictionsForLevel(globalLevel, true)}
               className="rounded-xl border bg-background px-4 py-2 text-sm font-medium hover:bg-muted"
             >
               Retry
@@ -1113,10 +1245,10 @@ function PredictionsPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold">
-                    {data.mlServiceHealthy ? "Flask ML Prediction Service Connected" : "Prediction Service Offline"}
+                    {data.mlServiceHealthy ? "Flask ML Prediction Service Connected (Lazy Single-Model Cache)" : "Prediction Service Offline"}
                   </h3>
                   <p className="text-xs text-muted-foreground">
-                    {data.predictableCourses} of {data.totalCourses} enrolled courses evaluated · Stages: Level 1 (CAT1+Quiz1), Level 2 (CAT1/2+Quiz1/2), Level 3 (Pre-FAT comprehensive)
+                    {data.predictableCourses} of {data.totalCourses} enrolled courses evaluated at {globalLevel.toUpperCase()} · Student: {data.fullName} ({data.studentNumber})
                   </p>
                 </div>
               </div>
@@ -1127,58 +1259,220 @@ function PredictionsPage() {
             </div>
           </div>
 
+          {/* Global Prediction Level Selector at Top of Page */}
+          <section className={`${card} border-primary/20 bg-card`}>
+            <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <Layers className="size-4" />
+                  </span>
+                  <h3 className="font-semibold text-lg">Global Prediction Level Selection</h3>
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Select a single prediction level applied uniformly across all enrolled courses to prevent redundant ML model reloading.
+                </p>
+              </div>
+
+              {switchingLevel && (
+                <div className="flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-3 py-1 text-xs font-medium text-primary shrink-0">
+                  <span className="size-3 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                  <span>Switching model to {globalLevel.toUpperCase()}…</span>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-4 grid gap-3 md:grid-cols-3">
+              {LEVEL_CONFIGS.map((cfg) => {
+                const isSelected = globalLevel === cfg.id;
+                // Count how many courses are eligible for this level
+                const eligibleCoursesCount = availability?.courses?.filter(
+                  (c) => c.levels?.[cfg.id]?.eligible
+                ).length ?? 0;
+                const totalCoursesCount = availability?.courses?.length ?? (data?.totalCourses ?? 0);
+
+                return (
+                  <button
+                    key={cfg.id}
+                    type="button"
+                    onClick={() => handleSelectGlobalLevel(cfg.id)}
+                    disabled={switchingLevel}
+                    className={`relative flex flex-col justify-between rounded-xl p-4 text-left transition-all cursor-pointer ${
+                      isSelected
+                        ? "border-2 border-primary bg-primary/10 text-foreground shadow-sm ring-1 ring-primary/20"
+                        : "border bg-card/70 hover:bg-muted/60 hover:border-primary/40 text-muted-foreground"
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-2">
+                        <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${
+                          isSelected ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
+                        }`}>
+                          {cfg.label}
+                        </span>
+                        <span className={`text-[11px] font-mono font-medium ${
+                          isSelected ? "text-primary font-semibold" : "text-muted-foreground"
+                        }`}>
+                          {cfg.badge}
+                        </span>
+                      </div>
+                      <h4 className={`mt-2 font-semibold text-sm ${isSelected ? "text-foreground" : "text-foreground/90"}`}>
+                        {cfg.title}
+                      </h4>
+                      <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                        {cfg.summary}
+                      </p>
+                    </div>
+
+                    <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between text-[11px]">
+                      <span className={isSelected ? "font-medium text-primary" : "text-muted-foreground"}>
+                        {totalCoursesCount > 0
+                          ? `${eligibleCoursesCount} of ${totalCoursesCount} courses eligible`
+                          : "Evaluating requirements…"}
+                      </span>
+                      {isSelected ? (
+                        <span className="flex items-center gap-1 font-semibold text-primary">
+                          <Check className="size-3.5 stroke-[3]" />
+                          <span>Active</span>
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground hover:text-foreground">Click to select</span>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* Enrolled Courses Predictions */}
           <section className={card}>
             <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
               <div>
-                <h3 className="font-semibold">Enrolled Course Predictions</h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Student: {data.fullName} ({data.studentNumber})
+                <h3 className="font-semibold text-base">Enrolled Course Predictions (Evaluating at {globalLevel.toUpperCase()})</h3>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  All courses evaluated using the active {globalLevel.toUpperCase()} model. If a course lacks required assessments, it is flagged as unavailable.
                 </p>
               </div>
             </div>
 
-            <div className="mt-5 grid gap-4 md:grid-cols-2">
+            <div className="mt-5 grid gap-5 lg:grid-cols-2">
               {data.predictions.map((p) => {
                 const isAvailable = p.predictionStatus === "AVAILABLE";
                 const isInsufficient = p.predictionStatus === "INSUFFICIENT_DATA";
+                const isUnsupported = p.predictionStatus === "UNSUPPORTED_COURSE";
+                const courseAvail = availability?.courses?.find((c) => c.courseCode === p.courseCode);
+                const activeLevelEligibility = courseAvail?.levels?.[globalLevel];
+                const activeConfig = LEVEL_CONFIGS.find((cfg) => cfg.id === globalLevel) || LEVEL_CONFIGS[0];
+
                 const riskColor =
                   p.riskLevel === "Low" ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30" :
                   p.riskLevel === "Medium" ? "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30" :
                   "bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/30";
 
                 return (
-                  <article className="flex flex-col justify-between rounded-xl border p-5 shadow-xs" key={p.courseCode}>
+                  <article className="flex flex-col justify-between rounded-xl border p-5 shadow-xs bg-card/60 transition-all hover:border-primary/40" key={p.courseCode}>
                     <div>
+                      {/* Course Header */}
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <div className="flex items-center gap-2">
                             <span className="font-mono text-xs font-bold text-muted-foreground">{p.courseCode}</span>
-                            {p.level && (
-                              <span className="rounded-md bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary capitalize">
-                                {p.level}
-                              </span>
-                            )}
+                            <span className="rounded-md bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary capitalize">
+                              {activeConfig.label} ({activeConfig.badge})
+                            </span>
                           </div>
                           <h4 className="mt-1 font-semibold text-base">{p.courseName}</h4>
                           <p className="mt-1 text-xs text-muted-foreground">
-                            {p.stageDescription || (isInsufficient ? "Assessment marks pending" : "Status pending")}
+                            {p.stageDescription || (isInsufficient ? "Assessment marks pending" : isUnsupported ? "Course not modeled" : "Prediction active")}
                           </p>
                         </div>
 
-                        {isAvailable && p.predictedOverallScore != null ? (
-                          <div className="text-right">
+                        {/* Top Score Display */}
+                        {isAvailable && p.predictedOverallScore != null && !switchingLevel ? (
+                          <div className="text-right shrink-0">
                             <span className="block text-2xl font-bold text-primary">
                               {p.predictedOverallScore.toFixed(1)}%
                             </span>
                             <span className="text-[11px] text-muted-foreground">Predicted Overall</span>
                           </div>
+                        ) : switchingLevel ? (
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground shrink-0">
+                            <span className="size-3.5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                            <span>Updating…</span>
+                          </div>
                         ) : (
-                          <span className="rounded-lg bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
-                            {isInsufficient ? "Pending Marks" : "Unavailable"}
+                          <span className={`rounded-lg px-2.5 py-1 text-xs font-medium shrink-0 ${
+                            isInsufficient ? "bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20" : "bg-muted text-muted-foreground"
+                          }`}>
+                            {isInsufficient ? "Pending Marks" : isUnsupported ? "Unsupported" : "Unavailable"}
                           </span>
                         )}
                       </div>
 
+                      {/* Ineligible Explanation Banner if course lacks required assessments for this global level */}
+                      {!isAvailable && (
+                        <div className="mt-4 rounded-lg border border-dashed border-amber-500/40 bg-amber-500/5 p-3 text-xs text-amber-800 dark:text-amber-300 flex items-start gap-2.5">
+                          <AlertTriangle className="size-4 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
+                          <div>
+                            <b>{activeConfig.label} unavailable for {p.courseCode}:</b>{" "}
+                            {p.statusMessage || activeLevelEligibility?.reason || "This course does not meet the assessment requirements for the selected prediction level."}
+                            <p className="mt-1 text-[11px] text-muted-foreground">
+                              Evaluated marks are loaded from authoritative records. Missing assessments are never invented or defaulted to zero.
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Required Assessment Inputs Breakdown for the Selected Level */}
+                      <div className="mt-4 rounded-xl border bg-muted/20 p-3">
+                        <div className="flex items-center justify-between text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                          <span>Inputs for {activeConfig.label}:</span>
+                          <span className="text-[10px] font-normal normal-case text-muted-foreground">
+                            Authoritative evaluated records
+                          </span>
+                        </div>
+
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {activeConfig.inputs.map((key) => {
+                            const normKey = key.toLowerCase();
+                            const recordedVal = courseAvail?.recordedMarks?.[normKey] ?? p.normalizedInputMarks?.[normKey];
+                            const hasRecord = recordedVal !== undefined && recordedVal !== null;
+                            const isLab = normKey.startsWith("lab");
+                            const label = normKey.startsWith("cat")
+                              ? normKey.toUpperCase() + " (/50)"
+                              : isLab
+                              ? normKey.toUpperCase() + " (/10)"
+                              : normKey.toUpperCase() + " (/10)";
+
+                            return (
+                              <div
+                                key={key}
+                                className={`flex items-center gap-1.5 rounded-lg border px-2 py-1 text-xs font-mono transition-colors ${
+                                  hasRecord
+                                    ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300"
+                                    : "border-dashed border-muted-foreground/30 bg-muted/40 text-muted-foreground"
+                                }`}
+                              >
+                                {hasRecord ? (
+                                  <Check className="size-3 text-emerald-600 dark:text-emerald-400 stroke-[3]" />
+                                ) : (
+                                  <span className="size-1.5 rounded-full bg-muted-foreground" />
+                                )}
+                                <span>{label}:</span>
+                                <b className="font-sans font-semibold">
+                                  {hasRecord ? recordedVal.toFixed(1) : "Pending"}
+                                </b>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <p className="mt-2 text-[10px] text-muted-foreground">
+                          Evaluated marks are loaded automatically from authoritative records. Missing assessments are never treated as zero.
+                        </p>
+                      </div>
+
+                      {/* Prediction Results Banner */}
                       {isAvailable && (
                         <div className="mt-4 flex flex-wrap items-center gap-2">
                           {p.likelyGrade && (
@@ -1193,35 +1487,16 @@ function PredictionsPage() {
                           )}
                           {p.illustrativeRange && p.illustrativeRange.length >= 2 && (
                             <span className="rounded-lg border bg-muted/30 px-2.5 py-1 text-xs text-muted-foreground">
-                              Range: {p.illustrativeRange[0].toFixed(1)}% – {p.illustrativeRange[1].toFixed(1)}%
+                              Illustrative Range: {p.illustrativeRange[0].toFixed(1)}% – {p.illustrativeRange[1].toFixed(1)}%
                             </span>
                           )}
-                        </div>
-                      )}
-
-                      {!isAvailable && (
-                        <div className="mt-4 rounded-lg border border-dashed bg-muted/30 p-3 text-xs text-muted-foreground">
-                          {p.statusMessage || "Early prediction requires at least completed CAT 1 and Quiz 1 marks."}
-                        </div>
-                      )}
-
-                      {p.normalizedInputMarks && Object.keys(p.normalizedInputMarks).length > 0 && (
-                        <div className="mt-4">
-                          <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">Evaluated Assessment Marks:</p>
-                          <div className="mt-1.5 flex flex-wrap gap-1.5">
-                            {Object.entries(p.normalizedInputMarks).map(([key, val]) => (
-                              <span className="rounded-md bg-muted px-2 py-0.5 text-xs font-mono" key={key}>
-                                {key.toUpperCase()}: <span className="font-semibold text-foreground">{val.toFixed(1)}</span>
-                              </span>
-                            ))}
-                          </div>
                         </div>
                       )}
                     </div>
 
                     <div className="mt-5 pt-3 border-t text-[11px] text-muted-foreground flex items-center justify-between">
                       <span>{p.completedAssessmentsCount} assessment(s) evaluated</span>
-                      <span className="text-emerald-700 dark:text-emerald-400 font-medium">FAT Excluded</span>
+                      <span className="text-emerald-700 dark:text-emerald-400 font-medium">FAT Excluded (Pre-FAT)</span>
                     </div>
                   </article>
                 );
@@ -1308,7 +1583,7 @@ function ProfilePage({
               <div>
                 <p className="text-xs text-muted-foreground">Previous CGPA</p>
                 <p className="mt-1 font-medium">
-                  {previousCgpa != null ? `${Number(previousCgpa).toFixed(2)} / 10` : "Not recorded"}
+                  {previousCgpa != null ? `${Number(previousCgpa).toFixed(2)} / 10` : "Historical record unavailable"}
                 </p>
               </div>
               <div>

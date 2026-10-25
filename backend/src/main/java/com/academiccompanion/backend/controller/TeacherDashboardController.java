@@ -408,7 +408,13 @@ public class TeacherDashboardController {
             list.add(map);
         }
 
-        return ResponseEntity.ok(Map.of("assessments", list));
+        Map<String, Object> cumulativeCourseAverageMap = computeClassCumulativeAverage(classId, studentIds, assessments);
+
+        Map<String, Object> resp = new LinkedHashMap<>();
+        resp.put("assessments", list);
+        resp.put("cumulativeCourseAverage", cumulativeCourseAverageMap);
+
+        return ResponseEntity.ok(resp);
     }
 
     @GetMapping("/classes/{classId}/marks")
@@ -543,22 +549,57 @@ public class TeacherDashboardController {
             assessList.add(aMap);
         }
 
+        // Determine whether class course is embedded
+        Document classDoc = mongoTemplate.findById(classId, Document.class, "classes");
+        String courseCode = classDoc != null ? classDoc.getString("courseCode") : null;
+        boolean isEmbedded = true;
+        if (courseCode != null) {
+            Document cDoc = mongoTemplate.findOne(new Query(Criteria.where("code").is(courseCode)), Document.class, "courses");
+            if (cDoc != null && cDoc.getString("evaluationType") != null) {
+                String et = cDoc.getString("evaluationType").toUpperCase(Locale.ROOT);
+                isEmbedded = (et.contains("LAB") && et.contains("THEORY")) || et.equals("EMBEDDED");
+            }
+        }
+
+        List<Double> cumulativeScores = new ArrayList<>();
         // Build students response
         List<Map<String, Object>> studentList = new ArrayList<>();
         for (Document s : students) {
             ObjectId sid = s.getObjectId("_id");
             String sidHex = sid != null ? sid.toHexString() : "";
 
+            Map<String, Double> sMarks = marksMap.getOrDefault(sidHex, Collections.emptyMap());
+            Double score = calculateStudentCourseScore(sMarks, assessments, isEmbedded);
+            if (score != null) {
+                cumulativeScores.add(score);
+            }
+
             Map<String, Object> sMap = new LinkedHashMap<>();
             sMap.put("studentId", sidHex);
             sMap.put("studentNumber", s.getString("studentNumber"));
             sMap.put("fullName", s.getString("fullName"));
-            sMap.put("marks", marksMap.getOrDefault(sidHex, Collections.emptyMap()));
+            sMap.put("marks", sMarks);
+            sMap.put("cumulativeScore", score);
+            sMap.put("completedAssessmentsCount", sMarks.size());
             studentList.add(sMap);
         }
 
+        Double classCumulativeAverage = null;
+        if (!cumulativeScores.isEmpty()) {
+            double cSum = 0.0;
+            for (Double d : cumulativeScores) cSum += d;
+            classCumulativeAverage = Math.round((cSum / cumulativeScores.size()) * 10.0) / 10.0;
+        }
+
+        Map<String, Object> cumulativeCourseAverageMap = new LinkedHashMap<>();
+        cumulativeCourseAverageMap.put("calculatedAverage", classCumulativeAverage);
+        cumulativeCourseAverageMap.put("gradedStudentsCount", cumulativeScores.size());
+        cumulativeCourseAverageMap.put("totalEnrolled", students.size());
+        cumulativeCourseAverageMap.put("formula", "Weighted score according to official scheme (CAT 1: 15%, CAT 2: 15%, Quizzes: 10% each, FAT: 40%, Labs: 25% embedded) normalized over completed assessments");
+
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("classId", classIdStr);
+        response.put("cumulativeCourseAverage", cumulativeCourseAverageMap);
         response.put("assessments", assessList);
         response.put("students", studentList);
 
@@ -835,5 +876,144 @@ public class TeacherDashboardController {
             return 10.0;
         }
         return storedMax != null && storedMax > 0 ? storedMax : 100.0;
+    }
+
+    private Double calculateStudentCourseScore(Map<String, Double> studentMarks, List<Assessment> assessments, boolean isEmbedded) {
+        if (studentMarks == null || studentMarks.isEmpty()) return null;
+
+        double earnedTheory = 0.0;
+        double completedTheoryWeight = 0.0;
+        double labSum = 0.0;
+        int labCount = 0;
+
+        for (Assessment a : assessments) {
+            String aid = a.getId();
+            if (aid == null || !studentMarks.containsKey(aid)) continue;
+            Double marks = studentMarks.get(aid);
+            if (marks == null) continue;
+
+            String name = (a.getName() != null ? a.getName() : "").toUpperCase(Locale.ROOT);
+            String type = (a.getType() != null ? a.getType() : "").toUpperCase(Locale.ROOT);
+
+            if (name.contains("CAT 1") || name.equals("CAT1") || (type.equals("CAT") && name.contains("1"))) {
+                earnedTheory += (marks / 50.0) * 15.0;
+                completedTheoryWeight += 15.0;
+            } else if (name.contains("CAT 2") || name.equals("CAT2") || (type.equals("CAT") && name.contains("2"))) {
+                earnedTheory += (marks / 50.0) * 15.0;
+                completedTheoryWeight += 15.0;
+            } else if (name.contains("QUIZ 1") || name.equals("QUIZ1") || (type.equals("QUIZ") && name.contains("1"))) {
+                earnedTheory += (marks / 10.0) * 10.0;
+                completedTheoryWeight += 10.0;
+            } else if (name.contains("QUIZ 2") || name.equals("QUIZ2") || (type.equals("QUIZ") && name.contains("2"))) {
+                earnedTheory += (marks / 10.0) * 10.0;
+                completedTheoryWeight += 10.0;
+            } else if (name.contains("QUIZ 3") || name.equals("QUIZ3") || (type.equals("QUIZ") && name.contains("3"))) {
+                earnedTheory += (marks / 10.0) * 10.0;
+                completedTheoryWeight += 10.0;
+            } else if (name.contains("FAT") || type.contains("FAT") || name.contains("FINAL")) {
+                earnedTheory += (marks / 100.0) * 40.0;
+                completedTheoryWeight += 40.0;
+            } else if (type.equals("LAB") || name.contains("LAB") || type.equals("OTHER")) {
+                labSum += marks;
+                labCount++;
+            }
+        }
+
+        Double theoryScore = completedTheoryWeight > 0 ? (earnedTheory / completedTheoryWeight) * 100.0 : null;
+        Double labScore = labCount > 0 ? (labSum / (labCount * 10.0)) * 100.0 : null;
+
+        if (theoryScore == null && labScore == null) return null;
+
+        double overall;
+        if (isEmbedded && theoryScore != null && labScore != null) {
+            overall = theoryScore * 0.75 + labScore * 0.25;
+        } else if (theoryScore != null) {
+            overall = theoryScore;
+        } else {
+            overall = labScore != null ? labScore : 0.0;
+        }
+
+        return Math.round(overall * 10.0) / 10.0;
+    }
+
+    private Map<String, Object> computeClassCumulativeAverage(ObjectId classId, Set<ObjectId> studentIds, List<Assessment> assessments) {
+        if (studentIds.isEmpty() || assessments.isEmpty()) {
+            Map<String, Object> emptyMap = new LinkedHashMap<>();
+            emptyMap.put("calculatedAverage", null);
+            emptyMap.put("gradedStudentsCount", 0);
+            emptyMap.put("totalEnrolled", studentIds.size());
+            emptyMap.put("formula", "Weighted score according to official scheme (CAT 1: 15%, CAT 2: 15%, Quizzes: 10% each, FAT: 40%, Labs: 25% embedded) normalized over completed assessments");
+            return emptyMap;
+        }
+
+        Document classDoc = mongoTemplate.findById(classId, Document.class, "classes");
+        String courseCode = classDoc != null ? classDoc.getString("courseCode") : null;
+        boolean isEmbedded = true;
+        if (courseCode != null) {
+            Document cDoc = mongoTemplate.findOne(new Query(Criteria.where("code").is(courseCode)), Document.class, "courses");
+            if (cDoc != null && cDoc.getString("evaluationType") != null) {
+                String et = cDoc.getString("evaluationType").toUpperCase(Locale.ROOT);
+                isEmbedded = (et.contains("LAB") && et.contains("THEORY")) || et.equals("EMBEDDED");
+            }
+        }
+
+        Set<String> aidHexes = new HashSet<>();
+        Set<Object> aidKeys = new HashSet<>();
+        for (Assessment a : assessments) {
+            if (a.getId() != null) {
+                aidHexes.add(a.getId());
+                aidKeys.add(a.getId());
+                if (ObjectId.isValid(a.getId())) aidKeys.add(new ObjectId(a.getId()));
+            }
+        }
+
+        List<Document> results = mongoTemplate.find(
+                new Query(new Criteria().orOperator(
+                        Criteria.where("assessmentId").in(aidKeys).and("studentId").in(studentIds),
+                        Criteria.where("classId").is(classId)
+                )),
+                Document.class,
+                "results"
+        );
+
+        Map<String, Map<String, Double>> marksMap = new HashMap<>();
+        for (Document r : results) {
+            if ("PENDING".equalsIgnoreCase(r.getString("status"))) continue;
+            Object sidObj = r.get("studentId");
+            String sidHex = sidObj instanceof ObjectId oid ? oid.toHexString() : (sidObj != null ? sidObj.toString() : null);
+            Object aidObj = r.get("assessmentId");
+            String aidHex = aidObj instanceof ObjectId oid ? oid.toHexString() : (aidObj != null ? aidObj.toString() : null);
+            if (sidHex != null && aidHex != null && aidHexes.contains(aidHex)) {
+                Double m = toDouble(r.get("obtainedMarks"));
+                if (m == null) m = toDouble(r.get("marksObtained"));
+                if (m != null) {
+                    marksMap.computeIfAbsent(sidHex, k -> new HashMap<>()).put(aidHex, m);
+                }
+            }
+        }
+
+        List<Double> cumulativeScores = new ArrayList<>();
+        for (ObjectId sid : studentIds) {
+            String sidHex = sid.toHexString();
+            Map<String, Double> sMarks = marksMap.getOrDefault(sidHex, Collections.emptyMap());
+            Double score = calculateStudentCourseScore(sMarks, assessments, isEmbedded);
+            if (score != null) {
+                cumulativeScores.add(score);
+            }
+        }
+
+        Double classCumulativeAverage = null;
+        if (!cumulativeScores.isEmpty()) {
+            double cSum = 0.0;
+            for (Double d : cumulativeScores) cSum += d;
+            classCumulativeAverage = Math.round((cSum / cumulativeScores.size()) * 10.0) / 10.0;
+        }
+
+        Map<String, Object> resp = new LinkedHashMap<>();
+        resp.put("calculatedAverage", classCumulativeAverage);
+        resp.put("gradedStudentsCount", cumulativeScores.size());
+        resp.put("totalEnrolled", studentIds.size());
+        resp.put("formula", "Weighted score according to official scheme (CAT 1: 15%, CAT 2: 15%, Quizzes: 10% each, FAT: 40%, Labs: 25% embedded) normalized over completed assessments");
+        return resp;
     }
 }

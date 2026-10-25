@@ -20,6 +20,7 @@ import {
 import {
   academicApi,
   type ClassMarksResponse,
+  type CumulativeCourseAverage,
   type TeacherAssessmentDetail,
   type TeacherClass,
   type TeacherStudentRoster,
@@ -493,6 +494,7 @@ function AssessmentsView({
   const [viewMode, setViewMode] = useState<"averages" | "marks">("averages")
   const [assessments, setAssessments] = useState<TeacherAssessmentDetail[]>([])
   const [marksData, setMarksData] = useState<ClassMarksResponse | null>(null)
+  const [cumulativeAvg, setCumulativeAvg] = useState<CumulativeCourseAverage | null>(null)
   const [loading, setLoading] = useState(false)
   const [savingAvgId, setSavingAvgId] = useState<string | null>(null)
   const [avgInputs, setAvgInputs] = useState<Record<string, string>>({})
@@ -512,6 +514,9 @@ function AssessmentsView({
       .then((res) => {
         const list = res.assessments || []
         setAssessments(list)
+        if (res.cumulativeCourseAverage) {
+          setCumulativeAvg(res.cumulativeCourseAverage)
+        }
         if (list.length > 0 && !selectedAssessmentId) {
           setSelectedAssessmentId(list[0].id)
         }
@@ -536,6 +541,9 @@ function AssessmentsView({
       .teacherClassMarks(classId)
       .then((res) => {
         setMarksData(res)
+        if (res.cumulativeCourseAverage) {
+          setCumulativeAvg(res.cumulativeCourseAverage)
+        }
         // If an assessment is selected, populate marksInputs
         const targetAid = selectedAssessmentId || (res.assessments && res.assessments[0]?.id)
         if (targetAid) {
@@ -704,10 +712,40 @@ function AssessmentsView({
         </div>
       ) : viewMode === "averages" ? (
         <section className={card}>
+          {/* Cumulative Course Performance Card */}
+          <div className="mb-6 rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 via-background to-primary/10 p-5 shadow-sm">
+            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary uppercase">
+                    Official Grading Formula
+                  </span>
+                  <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300">
+                    Cumulative Course Metric
+                  </span>
+                </div>
+                <h4 className="mt-2 text-xl font-bold tracking-tight">Class Cumulative Performance</h4>
+                <p className="mt-1 text-xs text-muted-foreground max-w-xl">
+                  Weighted course average across all graded evaluations (Theory: CAT 1 & 2 15% each, Quizzes 10% each, FAT 40%; Lab 25% embedded). Excludes missing evaluations.
+                </p>
+              </div>
+              <div className="text-left sm:text-right sm:border-l sm:pl-6">
+                <div className="text-3xl font-extrabold text-primary font-mono">
+                  {cumulativeAvg?.calculatedAverage != null
+                    ? `${cumulativeAvg.calculatedAverage.toFixed(1)}%`
+                    : "No evaluations yet"}
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground font-medium">
+                  {cumulativeAvg?.gradedStudentsCount ?? 0} of {cumulativeAvg?.totalEnrolled ?? 0} students evaluated
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div className="border-b pb-4">
-            <h3 className="text-lg font-semibold">Official Class Averages vs. Calculated Averages</h3>
+            <h3 className="text-lg font-semibold">Individual Assessment Performance & Official Overrides</h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              Teacher-entered official averages remain distinct from calculated averages dynamically derived from student marks.
+              Dynamic averages derived directly from graded student marks. Faculty can set official override averages per assessment.
             </p>
           </div>
 
@@ -883,7 +921,7 @@ function AssessmentsView({
             <table className="w-full min-w-[700px] text-left text-sm">
               <thead className="border-b text-xs uppercase text-muted-foreground">
                 <tr>
-                  {["Registration No.", "Student Name", "Marks Obtained", "Status"].map((h) => (
+                  {["Registration No.", "Student Name", "Course Performance", "Marks Obtained", "Status"].map((h) => (
                     <th className="p-3 font-semibold" key={h}>
                       {h}
                     </th>
@@ -901,6 +939,18 @@ function AssessmentsView({
                         {s.studentNumber}
                       </td>
                       <td className="p-3 font-medium">{s.fullName}</td>
+                      <td className="p-3">
+                        {s.cumulativeScore != null ? (
+                          <span className="font-semibold text-emerald-600 dark:text-emerald-400 font-mono text-xs">
+                            {s.cumulativeScore.toFixed(1)}%
+                          </span>
+                        ) : (
+                          <span className="text-xs text-muted-foreground italic">No evaluations</span>
+                        )}
+                        <span className="block text-[10px] text-muted-foreground">
+                          {s.completedAssessmentsCount ?? 0} graded
+                        </span>
+                      </td>
                       <td className="p-3">
                         <div className="flex items-center gap-2">
                           <input

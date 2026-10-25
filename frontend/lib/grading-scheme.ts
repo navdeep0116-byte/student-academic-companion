@@ -78,7 +78,7 @@ export function findAssessment(
 export function calculateCourseRecordedScore(course: LiveCourseMarks): CourseScoreCalculation {
   const assessments = course.assessments || []
   const evalType = (course.evaluationType || "THEORY").toUpperCase()
-  const isEmbedded = evalType === "EMBEDDED"
+  const isEmbedded = evalType === "EMBEDDED" || evalType === "THEORY_AND_LAB" || (evalType.includes("THEORY") && evalType.includes("LAB"))
   const isLabOnly = evalType === "LAB"
 
   // 1. Identify theory assessments

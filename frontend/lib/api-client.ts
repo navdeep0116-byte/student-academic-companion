@@ -69,6 +69,44 @@ export interface PredictionResponse {
   disclaimer: string
 }
 
+export interface LevelEligibility {
+  eligible: boolean
+  requiredInputs: string[]
+  missingInputs: string[]
+  reason: string | null
+}
+
+export interface CourseLevelAvailability {
+  courseId: string
+  courseCode: string
+  courseName: string
+  modelCourseCode: string
+  completedAssessmentsCount: number
+  recordedMarks: Record<string, number>
+  levels: {
+    level1: LevelEligibility
+    level2: LevelEligibility
+    level3: LevelEligibility
+    [key: string]: LevelEligibility
+  }
+  eligibleLevels: string[]
+}
+
+export interface PredictionAvailabilityResponse {
+  studentId: string
+  studentNumber: string
+  fullName: string
+  mlServiceHealthy: boolean
+  availableModels: string[]
+  courses: CourseLevelAvailability[]
+}
+
+export interface PredictRequest {
+  courseCode: string
+  level: "level1" | "level2" | "level3" | string
+  whatIfMarks?: Record<string, number>
+}
+
 export interface LiveAssessment {
   id: string
   assessmentId?: string | null
@@ -181,14 +219,24 @@ export interface TeacherAssessmentDetail {
   status?: string
 }
 
+export interface CumulativeCourseAverage {
+  calculatedAverage: number | null
+  gradedStudentsCount: number
+  totalEnrolled: number
+  formula: string
+}
+
 export interface ClassMarksResponse {
   classId: string
+  cumulativeCourseAverage?: CumulativeCourseAverage | null
   assessments: TeacherAssessmentDetail[]
   students: Array<{
     studentId: string
     studentNumber: string
     fullName: string
     marks: Record<string, number>
+    cumulativeScore?: number | null
+    completedAssessmentsCount?: number
   }>
 }
 
@@ -277,7 +325,14 @@ export interface StudentRecommendation {
 export const academicApi = {
   // Student
   studentDashboard: () => apiRequest<StudentDashboardResponse>("/api/student/dashboard"),
-  prediction: () => apiRequest<PredictionResponse>("/api/student/prediction"),
+  prediction: (level?: string) =>
+    apiRequest<PredictionResponse>(level ? `/api/student/prediction?level=${encodeURIComponent(level)}` : "/api/student/prediction"),
+  predictionAvailability: () => apiRequest<PredictionAvailabilityResponse>("/api/student/prediction/availability"),
+  predictLevel: (body: PredictRequest) =>
+    apiRequest<CoursePrediction>("/api/student/prediction", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
   marks: () => apiRequest<StudentMarksResponse>("/api/student/marks"),
   attendance: () => apiRequest<StudentAttendanceResponse>("/api/student/attendance"),
   recommendations: () => apiRequest<{ recommendations: StudentRecommendation[] }>("/api/student/recommendations"),
@@ -288,7 +343,7 @@ export const academicApi = {
   teacherClassStudents: (classId: string) =>
     apiRequest<{ students: TeacherStudentRoster[] }>(`/api/teacher/classes/${classId}/students`),
   teacherClassAssessments: (classId: string) =>
-    apiRequest<{ assessments: TeacherAssessmentDetail[] }>(`/api/teacher/classes/${classId}/assessments`),
+    apiRequest<{ assessments: TeacherAssessmentDetail[]; cumulativeCourseAverage?: CumulativeCourseAverage | null }>(`/api/teacher/classes/${classId}/assessments`),
   teacherClassMarks: (classId: string) =>
     apiRequest<ClassMarksResponse>(`/api/teacher/classes/${classId}/marks`),
   updateClassMarks: (

@@ -1,6 +1,8 @@
 package com.academiccompanion.backend.service;
 
+import com.academiccompanion.backend.dto.CourseLevelAvailabilityDto;
 import com.academiccompanion.backend.dto.CoursePredictionDto;
+import com.academiccompanion.backend.dto.LevelEligibilityDto;
 import com.academiccompanion.backend.model.AssessmentResult;
 import com.academiccompanion.backend.model.AttendanceRecord;
 import com.academiccompanion.backend.model.Course;
@@ -34,7 +36,7 @@ public class MlPredictionService {
 
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
         requestFactory.setConnectTimeout(Duration.ofSeconds(2));
-        requestFactory.setReadTimeout(Duration.ofSeconds(3));
+        requestFactory.setReadTimeout(Duration.ofSeconds(4));
 
         this.restClient = RestClient.builder()
                 .baseUrl(this.mlServiceUrl)
@@ -55,11 +57,116 @@ public class MlPredictionService {
         }
     }
 
-    public CoursePredictionDto predictForCourse(
+    public Set<String> getAvailableModelLevels() {
+        try {
+            Map<?, ?> response = restClient.get()
+                    .uri("/models")
+                    .retrieve()
+                    .body(Map.class);
+            if (response != null && response.get("availableLevels") instanceof List<?> list) {
+                Set<String> set = new LinkedHashSet<>();
+                for (Object item : list) {
+                    if (item != null) set.add(item.toString());
+                }
+                return set;
+            }
+        } catch (Exception e) {
+            log.warn("Failed to query model availability from ML service at {}: {}", mlServiceUrl, e.getMessage());
+        }
+        return Collections.emptySet();
+    }
+
+    public LevelEligibilityDto checkLevelEligibility(String level, Map<String, Double> marks, Set<String> availableModels) {
+        if (marks == null) {
+            marks = Collections.emptyMap();
+        }
+
+        List<String> requiredInputs;
+        List<String> missing = new ArrayList<>();
+
+        if ("level1".equalsIgnoreCase(level)) {
+            requiredInputs = List.of("cat1", "quiz1");
+            if (!marks.containsKey("cat1")) missing.add("CAT 1");
+            if (!marks.containsKey("quiz1")) missing.add("Quiz 1");
+        } else if ("level2".equalsIgnoreCase(level)) {
+            requiredInputs = List.of("cat1", "cat2", "quiz1", "quiz2");
+            if (!marks.containsKey("cat1")) missing.add("CAT 1");
+            if (!marks.containsKey("cat2")) missing.add("CAT 2");
+            if (!marks.containsKey("quiz1")) missing.add("Quiz 1");
+            if (!marks.containsKey("quiz2")) missing.add("Quiz 2");
+        } else if ("level3".equalsIgnoreCase(level)) {
+            List<String> allInputs = new ArrayList<>(List.of("cat1", "cat2", "quiz1", "quiz2", "quiz3"));
+            for (int i = 1; i <= 10; i++) {
+                allInputs.add("lab" + i);
+            }
+            requiredInputs = allInputs;
+
+            if (!marks.containsKey("cat1")) missing.add("CAT 1");
+            if (!marks.containsKey("cat2")) missing.add("CAT 2");
+            if (!marks.containsKey("quiz1")) missing.add("Quiz 1");
+            if (!marks.containsKey("quiz2")) missing.add("Quiz 2");
+            if (!marks.containsKey("quiz3")) missing.add("Quiz 3");
+
+            List<String> missingLabs = new ArrayList<>();
+            for (int i = 1; i <= 10; i++) {
+                if (!marks.containsKey("lab" + i)) {
+                    missingLabs.add("Lab " + i);
+                }
+            }
+            if (missingLabs.size() == 10) {
+                missing.add("10 Lab assessments");
+            } else if (!missingLabs.isEmpty()) {
+                missing.add(String.join(", ", missingLabs));
+            }
+        } else {
+            return new LevelEligibilityDto(false, Collections.emptyList(), List.of("Unknown level"), "Unknown prediction level: " + level);
+        }
+
+        if (availableModels != null && !availableModels.isEmpty() && !availableModels.contains(level.toLowerCase(Locale.ROOT))) {
+            return new LevelEligibilityDto(false, requiredInputs, missing, "Model file for " + level + " is not available in ML service.");
+        }
+
+        if (!missing.isEmpty()) {
+            return new LevelEligibilityDto(false, requiredInputs, missing, "Missing completed results for: " + String.join(", ", missing));
+        }
+
+        return new LevelEligibilityDto(true, requiredInputs, Collections.emptyList(), null);
+    }
+
+    public CourseLevelAvailabilityDto getCourseLevelAvailability(Course course, List<AssessmentResult> results, Set<String> availableModels) {
+        CourseLevelAvailabilityDto dto = new CourseLevelAvailabilityDto();
+        dto.setCourseId(course.getId());
+        dto.setCourseCode(course.getCode());
+        dto.setCourseName(course.getName());
+        dto.setModelCourseCode(mapCourseCode(course.getCode(), course.getName()));
+
+        Map<String, Double> normalizedMarks = extractNormalizedMarks(results);
+        dto.setCompletedAssessmentsCount(normalizedMarks.size());
+        dto.setRecordedMarks(normalizedMarks);
+
+        Map<String, LevelEligibilityDto> levels = new LinkedHashMap<>();
+        List<String> eligibleLevels = new ArrayList<>();
+
+        for (String lvl : List.of("level1", "level2", "level3")) {
+            LevelEligibilityDto elig = checkLevelEligibility(lvl, normalizedMarks, availableModels);
+            levels.put(lvl, elig);
+            if (elig.isEligible()) {
+                eligibleLevels.add(lvl);
+            }
+        }
+
+        dto.setLevels(levels);
+        dto.setEligibleLevels(eligibleLevels);
+        return dto;
+    }
+
+    public CoursePredictionDto predictForCourseWithLevel(
             Course course,
             List<AssessmentResult> results,
             AttendanceRecord attendance,
-            Double studentCgpa) {
+            Double studentCgpa,
+            String requestedLevel,
+            Map<String, Double> whatIfMarks) {
 
         CoursePredictionDto dto = new CoursePredictionDto();
         dto.setCourseId(course.getId());
@@ -67,32 +174,56 @@ public class MlPredictionService {
         dto.setCourseName(course.getName());
         dto.setWarning("Synthetic demo data model. Overall course score out of 100, NOT FAT marks.");
 
-        // 1. Resolve normalized course code for ML model
-        String modelCourseCode = mapCourseCode(course.getCode(), course.getName());
-
-        // 2. Extract and normalize evaluated assessment marks (strictly excluding FAT)
-        Map<String, Double> normalizedMarks = extractNormalizedMarks(results);
-        dto.setCompletedAssessmentsCount(normalizedMarks.size());
-        dto.setNormalizedInputMarks(normalizedMarks);
-
-        // 3. Determine stage based on required marks
-        String stage = determineEligibleStage(normalizedMarks);
-        if (stage == null) {
+        if (requestedLevel == null || (!requestedLevel.equalsIgnoreCase("level1")
+                && !requestedLevel.equalsIgnoreCase("level2")
+                && !requestedLevel.equalsIgnoreCase("level3"))) {
             dto.setPredictionStatus("INSUFFICIENT_DATA");
-            dto.setLevel(null);
-            dto.setStageDescription("Level 1 requires completed CAT 1 and Quiz 1.");
-            dto.setStatusMessage("Prediction pending: insufficient evaluations. At least CAT 1 and Quiz 1 must be completed.");
+            dto.setStatusMessage("Invalid prediction level requested. Must be level1, level2, or level3.");
             return dto;
         }
 
+        String stage = requestedLevel.toLowerCase(Locale.ROOT);
         dto.setLevel(stage);
         switch (stage) {
             case "level1" -> dto.setStageDescription("Level 1 (Early prediction based on CAT 1 and Quiz 1)");
             case "level2" -> dto.setStageDescription("Level 2 (Mid-semester prediction based on CAT 1, CAT 2, Quiz 1, Quiz 2)");
-            case "level3" -> dto.setStageDescription("Level 3 (Pre-FAT comprehensive prediction with CATs, Quizzes, and available Labs)");
+            case "level3" -> dto.setStageDescription("Level 3 (Pre-FAT comprehensive prediction with CATs, Quizzes, and all 10 Labs)");
         }
 
-        // 4. Resolve context parameters
+        String modelCourseCode = mapCourseCode(course.getCode(), course.getName());
+        if (modelCourseCode == null || !SUPPORTED_COURSES.contains(modelCourseCode)) {
+            dto.setPredictionStatus("UNSUPPORTED_COURSE");
+            dto.setStatusMessage("Course " + (course != null && course.getCode() != null ? course.getCode() : "unknown") + " is not supported by the ML prediction model.");
+            return dto;
+        }
+
+        Map<String, Double> authoritativeMarks = extractNormalizedMarks(results);
+        dto.setCompletedAssessmentsCount(authoritativeMarks.size());
+
+        // Merge what-if marks if provided; authoritative completed marks strictly take precedence
+        Map<String, Double> effectiveMarks = new LinkedHashMap<>(authoritativeMarks);
+        if (whatIfMarks != null) {
+            for (Map.Entry<String, Double> entry : whatIfMarks.entrySet()) {
+                String key = entry.getKey() != null ? entry.getKey().toLowerCase(Locale.ROOT) : "";
+                Double val = entry.getValue();
+                if (!effectiveMarks.containsKey(key) && val != null) {
+                    effectiveMarks.put(key, val);
+                }
+            }
+        }
+
+        dto.setNormalizedInputMarks(effectiveMarks);
+
+        // Server-side validation of level eligibility
+        Set<String> availableModels = getAvailableModelLevels();
+        LevelEligibilityDto eligibility = checkLevelEligibility(stage, effectiveMarks, availableModels);
+        if (!eligibility.isEligible()) {
+            dto.setPredictionStatus("INSUFFICIENT_DATA");
+            dto.setStatusMessage(eligibility.getReason() != null ? eligibility.getReason() : "Requirements for " + stage + " are not met.");
+            return dto;
+        }
+
+        // Context parameters
         double attendancePct = 80.0;
         if (attendance != null && attendance.getAttendancePercentage() != null) {
             attendancePct = attendance.getAttendancePercentage();
@@ -100,31 +231,28 @@ public class MlPredictionService {
         double cgpa = (studentCgpa != null && studentCgpa > 0) ? studentCgpa : 7.0;
         double weeklyStudyHours = 8.0;
 
-        // 5. Construct payload for Flask
+        // Build Flask payload
         Map<String, Object> payloadMarks = new LinkedHashMap<>();
         if ("level1".equals(stage)) {
-            payloadMarks.put("cat1", normalizedMarks.get("cat1"));
-            payloadMarks.put("quiz1", normalizedMarks.get("quiz1"));
+            payloadMarks.put("cat1", effectiveMarks.get("cat1"));
+            payloadMarks.put("quiz1", effectiveMarks.get("quiz1"));
         } else if ("level2".equals(stage)) {
-            payloadMarks.put("cat1", normalizedMarks.get("cat1"));
-            payloadMarks.put("cat2", normalizedMarks.get("cat2"));
-            payloadMarks.put("quiz1", normalizedMarks.get("quiz1"));
-            payloadMarks.put("quiz2", normalizedMarks.get("quiz2"));
+            payloadMarks.put("cat1", effectiveMarks.get("cat1"));
+            payloadMarks.put("cat2", effectiveMarks.get("cat2"));
+            payloadMarks.put("quiz1", effectiveMarks.get("quiz1"));
+            payloadMarks.put("quiz2", effectiveMarks.get("quiz2"));
         } else {
-            payloadMarks.put("cat1", normalizedMarks.get("cat1"));
-            payloadMarks.put("cat2", normalizedMarks.get("cat2"));
-            payloadMarks.put("quiz1", normalizedMarks.get("quiz1"));
-            payloadMarks.put("quiz2", normalizedMarks.get("quiz2"));
-            payloadMarks.put("quiz3", normalizedMarks.get("quiz3"));
+            payloadMarks.put("cat1", effectiveMarks.get("cat1"));
+            payloadMarks.put("cat2", effectiveMarks.get("cat2"));
+            payloadMarks.put("quiz1", effectiveMarks.get("quiz1"));
+            payloadMarks.put("quiz2", effectiveMarks.get("quiz2"));
+            payloadMarks.put("quiz3", effectiveMarks.get("quiz3"));
             for (int i = 1; i <= 10; i++) {
-                String labKey = "lab" + i;
-                if (normalizedMarks.containsKey(labKey)) {
-                    payloadMarks.put(labKey, normalizedMarks.get(labKey));
-                }
+                payloadMarks.put("lab" + i, effectiveMarks.get("lab" + i));
             }
         }
 
-        // Final verification: ensure no forbidden FAT/final keys exist
+        // Strict guard: ensure no forbidden FAT or final keys exist
         payloadMarks.remove("fat");
         payloadMarks.remove("fatMarks");
         payloadMarks.remove("overallScore");
@@ -139,7 +267,6 @@ public class MlPredictionService {
         requestBody.put("weeklyStudyHours", round(weeklyStudyHours, 1));
         requestBody.put("marks", payloadMarks);
 
-        // 6. Call Flask service
         try {
             Map<?, ?> response = restClient.post()
                     .uri("/predict")
@@ -169,11 +296,37 @@ public class MlPredictionService {
                 return dto;
             }
         } catch (Exception e) {
-            log.warn("Failed to obtain prediction from ML service for course {}: {}", course.getCode(), e.getMessage());
+            log.warn("Failed to obtain prediction from ML service for course {} ({}): {}", course.getCode(), stage, e.getMessage());
             dto.setPredictionStatus("SERVICE_UNAVAILABLE");
             dto.setStatusMessage("ML prediction service is currently unavailable.");
             return dto;
         }
+    }
+
+    public CoursePredictionDto predictForCourse(
+            Course course,
+            List<AssessmentResult> results,
+            AttendanceRecord attendance,
+            Double studentCgpa) {
+
+        Map<String, Double> normalizedMarks = extractNormalizedMarks(results);
+        String stage = determineEligibleStage(normalizedMarks);
+        if (stage == null) {
+            CoursePredictionDto dto = new CoursePredictionDto();
+            dto.setCourseId(course.getId());
+            dto.setCourseCode(course.getCode());
+            dto.setCourseName(course.getName());
+            dto.setWarning("Synthetic demo data model. Overall course score out of 100, NOT FAT marks.");
+            dto.setPredictionStatus("INSUFFICIENT_DATA");
+            dto.setLevel(null);
+            dto.setCompletedAssessmentsCount(normalizedMarks.size());
+            dto.setNormalizedInputMarks(normalizedMarks);
+            dto.setStageDescription("Level 1 requires completed CAT 1 and Quiz 1.");
+            dto.setStatusMessage("Prediction pending: insufficient evaluations. At least CAT 1 and Quiz 1 must be completed.");
+            return dto;
+        }
+
+        return predictForCourseWithLevel(course, results, attendance, studentCgpa, stage, null);
     }
 
     public String mapCourseCode(String code, String name) {
@@ -209,7 +362,7 @@ public class MlPredictionService {
             if (upper.contains("JAVA")) return "JAVA";
             if (upper.contains("SE")) return "SE";
         }
-        return "DBMS";
+        return null;
     }
 
     public Map<String, Double> extractNormalizedMarks(List<AssessmentResult> results) {
@@ -258,7 +411,7 @@ public class MlPredictionService {
     }
 
     public String determineEligibleStage(Map<String, Double> marks) {
-        if (!marks.containsKey("cat1") || !marks.containsKey("quiz1")) {
+        if (marks == null || !marks.containsKey("cat1") || !marks.containsKey("quiz1")) {
             return null; // Level 1 requires CAT 1 and Quiz 1
         }
         if (!marks.containsKey("cat2") || !marks.containsKey("quiz2")) {
@@ -266,6 +419,11 @@ public class MlPredictionService {
         }
         if (!marks.containsKey("quiz3")) {
             return "level2"; // Level 2 satisfied, Level 3 missing quiz3
+        }
+        for (int i = 1; i <= 10; i++) {
+            if (!marks.containsKey("lab" + i)) {
+                return "level2"; // Level 3 requires all 10 labs
+            }
         }
         return "level3"; // Level 3 satisfied
     }

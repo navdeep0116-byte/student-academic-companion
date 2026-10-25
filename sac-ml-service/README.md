@@ -66,3 +66,19 @@ Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:5000/predict" -ContentType
 ```
 
 All generated records and metrics are synthetic. They demonstrate the workflow and are not evidence of real-world predictive accuracy. `historical_training_data.csv` includes the FAT target for training only; do not use it as current student input.
+
+## Production Deployment (Render Free Web Service)
+
+### Recommended Gunicorn Start Command
+```bash
+gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 90 --max-requests 500 --max-requests-jitter 50 app:app
+```
+
+### Configuration Rationale for Render Free (512 MB RAM Limit)
+- **`--bind 0.0.0.0:$PORT`**: Binds to all network interfaces on the dynamically assigned Render `$PORT` (typically 10000).
+- **`--workers 1`**: Ensures only **one worker process** runs. Multiple worker processes would each hold their own Python runtime, scikit-learn libraries, and cached model (~310 MB each), which would breach Render Free's 512 MB ceiling and trigger an OOM termination.
+- **`--threads 4`**: Enables concurrent handling of up to 4 simultaneous HTTP requests within the single worker process without duplicating memory overhead.
+- **`--timeout 90`**: Accommodates lazy model loading (~1.5s cold start) and prevents worker timeout restarts during model deserialization.
+- **`--max-requests 500` & `--max-requests-jitter 50`**: Periodically recycles the worker process to prevent Python heap fragmentation over long uptimes.
+- **Single-Model Cache**: `app.py` enforces retaining at most 1 model in memory at a time. Switching levels unloads the previously active model, invokes `gc.collect()`, and loads the new model, maintaining RAM usage at ~306–310 MB.
+

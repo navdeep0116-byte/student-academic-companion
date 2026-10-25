@@ -79,3 +79,7 @@ target/
 Thumbs.db
 ehthumbs.db
 desktop.ini
+
+# Local worktrees and verification artifacts
+.worktrees/
+scratch/
