@@ -1,0 +1,14 @@
+target/
+*.jar
+*.war
+.git/
+.gitignore
+.gitattributes
+.mvn/wrapper/maven-wrapper.jar
+*.md
+.idea/
+.vscode/
+*.log
+.DS_Store
+*.cmd
+.env*
